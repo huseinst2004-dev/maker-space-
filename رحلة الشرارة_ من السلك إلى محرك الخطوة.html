@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>رحلة الشرارة: من السلك إلى محرك الخطوة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFF6E6; --paper2:#FFEBC9; --ink:#1B2547; --ink2:#525C80; --card:#FFFFFF;
+  --yellow:#FFC531; --coral:#FF6B57; --teal:#14A89A; --blue:#3C78F0; --violet:#8A5CF6; --green:#2E9D5B;
+  --brand:#FF6B57;
+  --line:2.5px solid var(--ink); --shadow:4px 4px 0 var(--ink); --r:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Baloo Bhaijaan 2',system-ui,sans-serif;color:var(--ink);background:var(--paper);
+  background-image:radial-gradient(circle at 1px 1px, rgba(27,37,71,.10) 1.2px, transparent 0);background-size:22px 22px;
+  font-size:18px;line-height:1.7;min-height:100vh}
+button{font-family:inherit;color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+
+/* ===== Header / brand ===== */
+header.top{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:var(--line)}
+.topbar{display:flex;align-items:center;gap:14px;padding:10px 0}
+.logo{width:52px;height:52px;border:var(--line);border-radius:16px;background:var(--brand);display:grid;place-items:center;box-shadow:3px 3px 0 var(--ink);flex:none}
+.logo svg{width:36px;height:36px;color:#fff}
+.brand-name{font-weight:800;font-size:24px;line-height:1.1}
+.brand-tag{font-size:14px;color:var(--ink2);line-height:1.2}
+.spacer{flex:1}
+.stars-pill{border:var(--line);border-radius:999px;padding:4px 14px;background:#fff;font-weight:700;white-space:nowrap}
+.btn{border:var(--line);border-radius:14px;background:#fff;padding:8px 16px;font-weight:700;font-size:17px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .08s, box-shadow .08s;white-space:nowrap}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.yellow{background:var(--yellow)}
+.btn.teal{background:var(--teal);color:#fff}
+.btn.blue{background:var(--blue);color:#fff}
+.btn.on{background:var(--ink);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* track nav */
+nav.track{display:flex;gap:6px;overflow-x:auto;padding:8px 0 12px;scrollbar-width:thin}
+.stop{flex:none;display:flex;align-items:center;gap:6px;border:var(--line);background:#fff;border-radius:999px;padding:3px 12px 3px 4px;cursor:pointer;font-weight:600;font-size:15px}
+.stop .n{width:28px;height:28px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--paper2)}
+.stop.done .n{background:var(--teal);color:#fff}
+.stop.active{background:var(--ink);color:#fff}
+.stop.active .n{background:var(--yellow);color:var(--ink)}
+
+/* sections */
+main{padding:22px 0 40px}
+section.view{display:none;animation:pop .35s ease}
+section.view.show{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.eyebrow{display:inline-block;background:var(--yellow);border:var(--line);border-radius:10px;padding:0 12px;font-weight:800;font-size:15px}
+h1{font-size:40px;line-height:1.2;margin:10px 0 6px}
+h2{font-size:30px;line-height:1.25;margin:8px 0 6px}
+h3{font-size:22px;margin:14px 0 6px}
+p{margin:6px 0 10px}
+.lead{font-size:20px;color:var(--ink2);max-width:760px}
+.card{background:var(--card);border:var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
+.stage{background:#FFFDF8;border:var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;position:relative}
+.stage svg{display:block;width:100%;height:auto;direction:ltr}
+.enc .e svg,.part svg{direction:ltr}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0}
+.ctl{display:flex;align-items:center;gap:8px;background:#fff;border:var(--line);border-radius:14px;padding:6px 12px;font-weight:600}
+.ctl input[type=range]{width:150px;accent-color:var(--brand)}
+.ctl select,.ctl input[type=number]{font-family:inherit;font-size:16px;border:2px solid var(--ink);border-radius:8px;padding:2px 6px;background:var(--paper)}
+.ctl b{min-width:54px;display:inline-block;text-align:center;font-family:'JetBrains Mono',monospace;direction:ltr}
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.grid4{grid-template-columns:1fr 1fr}h1{font-size:30px}h2{font-size:25px}}
+@media (max-width:520px){.grid3{grid-template-columns:1fr}body{font-size:17px}}
+
+/* mascot bubble */
+.guide{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
+.guide svg.m{width:70px;height:78px;flex:none}
+.bubble{position:relative;background:#fff;border:var(--line);border-radius:18px;padding:10px 16px;box-shadow:3px 3px 0 var(--ink);font-weight:600;min-height:54px;flex:1;transition:background .3s}
+.bubble:before{content:"";position:absolute;right:-12px;top:20px;border:10px solid transparent;border-left-color:var(--ink);border-right:0}
+.bubble.warn{background:#FFE3DE}
+.bubble.good{background:#DDF7EF}
+.m.bob{animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+
+.tip{background:var(--paper2);border:var(--line);border-radius:14px;padding:10px 14px;margin:14px 0}
+.tip b{color:var(--brand)}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.meter{background:var(--ink);color:#fff;border-radius:14px;padding:8px 12px;border:var(--line)}
+.meter small{display:block;color:#B9C3E6;font-size:13px}
+.meter b{font-family:'JetBrains Mono',monospace;font-size:22px;direction:ltr;display:inline-block}
+
+.compare{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+.compare .c{background:#fff;border:var(--line);border-radius:14px;padding:12px;text-align:center}
+.compare .c .ic{font-size:34px}
+.compare .c.hl{background:#E4EEFF}
+@media (max-width:700px){.compare{grid-template-columns:1fr 1fr}}
+
+/* quiz */
+.quiz{margin:20px 0 4px;background:#fff;border:var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
+.quiz .q{font-weight:800;font-size:20px;margin-bottom:8px}
+.quiz .opts{display:flex;flex-wrap:wrap;gap:8px}
+.quiz .opt{border:var(--line);border-radius:12px;background:var(--paper);padding:6px 14px;cursor:pointer;font-weight:600;font-size:17px}
+.quiz .opt.right{background:var(--teal);color:#fff}
+.quiz .opt.wrong{background:#FFD3CC;text-decoration:line-through}
+.quiz .fb{margin-top:8px;font-weight:600;min-height:28px}
+.nextrow{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+
+/* home */
+.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:center}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+.map{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+@media (max-width:700px){.map{grid-template-columns:1fr 1fr}}
+.station{background:#fff;border:var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow);cursor:pointer;text-align:right;font-size:16px;transition:transform .1s}
+.station:hover{transform:translate(-2px,-2px) rotate(-.5deg)}
+.station .sn{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--yellow);border:2px solid var(--ink);font-weight:800}
+.station h4{margin:6px 0 2px;font-size:20px}
+.station p{margin:0;color:var(--ink2);font-size:15px;line-height:1.5}
+.station.done{background:#E6FAF4}
+
+/* lab */
+.tray{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.part{display:flex;flex-direction:column;align-items:center;gap:0;border:var(--line);border-radius:14px;background:#fff;padding:4px 8px 2px;cursor:pointer;min-width:84px;font-weight:600;font-size:14px}
+.part svg{width:72px;height:36px}
+.part.sel{background:var(--yellow);transform:translateY(-3px);box-shadow:3px 3px 0 var(--ink)}
+.slot{cursor:pointer}
+.slot:hover .slotbox{stroke:var(--brand)}
+.enc{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:12px}
+.enc .e{background:#fff;border:var(--line);border-radius:14px;padding:10px 12px;cursor:pointer}
+.enc .e svg{width:100%;height:56px;background:var(--paper);border-radius:10px;border:2px solid var(--ink)}
+.enc .e h4{margin:6px 0 0;font-size:18px}
+.enc .e p{margin:2px 0 0;font-size:15px;line-height:1.5;color:var(--ink2);display:none}
+.enc .e.open p{display:block}
+.enc .e .tag{font-size:13px;color:var(--brand);font-weight:700}
+
+/* code */
+.code{direction:ltr;text-align:left;background:#14193A;color:#E8ECFF;border:var(--line);border-radius:14px;padding:12px 0;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.75;overflow-x:auto;box-shadow:var(--shadow)}
+.code .ln{display:block;padding:0 14px;white-space:pre;cursor:pointer;border-left:4px solid transparent}
+.code .ln:hover{background:#222a5c}
+.code .ln.hl{background:#3a2f12;border-left-color:var(--yellow)}
+.code .ln.sel{background:#16384a;border-left-color:var(--teal)}
+.code .ln i{color:#7f8bc4;font-style:normal}
+.code .kw{color:#FF9E8F}.code .fn{color:#7CE3D8}.code .num{color:#FFD36B}.code .str{color:#B6F27E}
+.explain{background:#E9FBF7;border:var(--line);border-radius:14px;padding:10px 14px;margin-top:10px;min-height:64px}
+.serial{direction:ltr;text-align:left;background:#0E1230;color:#7CF5A6;font-family:'JetBrains Mono',monospace;font-size:13px;border:var(--line);border-radius:12px;padding:8px 12px;height:130px;overflow-y:auto;white-space:pre-wrap}
+.check{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+.check li{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:6px 10px;font-size:16px}
+.check li .dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--ink);flex:none}
+.check li.ok{background:#E6FAF4}
+.check li .btn{padding:2px 10px;font-size:14px;margin-inline-start:auto;box-shadow:2px 2px 0 var(--ink)}
+.progress{height:14px;border:var(--line);border-radius:999px;background:#fff;overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:var(--teal);transition:width .2s}
+.seq{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;direction:ltr;text-align:center;background:#fff;border:var(--line);border-radius:12px;overflow:hidden}
+.seq th,.seq td{border:1.5px solid #c9cde0;padding:3px 6px;font-size:14px}
+.seq th{background:var(--paper2)}
+.seq tr.cur td{background:var(--yellow);font-weight:700}
+.seq td.one{color:var(--coral);font-weight:800}
+
+
+.chs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:900px){.chs{grid-template-columns:1fr}}
+.ch{background:#fff;border:var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px}
+.ch.solved{background:#E6FAF4}
+.ch h3{margin:0 0 2px}
+.ch .story{color:var(--ink2);font-size:16px;margin:0 0 8px}
+.ch .row{display:grid;grid-template-columns:1fr 150px;gap:10px;align-items:start}
+.ch .code{font-size:13px;box-shadow:none}
+.code select{font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--yellow);color:#14193A;border:2px solid #fff;border-radius:6px;font-weight:700;padding:0 2px}
+.ch svg.dial{width:150px;height:150px;background:#FFFDF8;border:2px solid var(--ink);border-radius:14px}
+.ch .res{font-weight:700;min-height:28px;margin-top:6px;font-size:16px}
+.hold{user-select:none;-webkit-user-select:none;touch-action:none}
+.hold.down{background:var(--coral);color:#fff;transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+/* certificate */
+.cert{background:#fff;border:var(--line);border-radius:24px;box-shadow:8px 8px 0 var(--ink);padding:28px;position:relative;overflow:hidden;text-align:center;max-width:820px;margin:16px auto}
+.cert:before{content:"";position:absolute;inset:12px;border:3px dashed var(--brand);border-radius:16px;pointer-events:none}
+.cert .wm{position:absolute;left:-30px;bottom:-30px;width:220px;height:220px;color:var(--brand);opacity:.09}
+.cert h2{font-size:36px;margin:4px 0}
+.cert .kid{font-size:40px;font-weight:800;color:var(--brand);border-bottom:3px solid var(--ink);display:inline-block;padding:0 30px;min-width:260px}
+.cert .sig{display:flex;justify-content:space-between;align-items:flex-end;margin-top:24px;gap:10px;flex-wrap:wrap}
+.cert .sig div{text-align:center;min-width:180px}
+.cert .sig .lineS{border-top:2px solid var(--ink);margin-top:6px;padding-top:2px;font-size:15px;color:var(--ink2)}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(27,37,71,.45);display:none;place-items:center;z-index:50;padding:16px}
+.modal.show{display:grid}
+.modal .card{max-width:480px;width:100%}
+.field{display:flex;flex-direction:column;gap:2px;margin:8px 0}
+.field input{font-family:inherit;font-size:18px;border:var(--line);border-radius:12px;padding:6px 10px;background:var(--paper)}
+.sw{display:flex;gap:8px;flex-wrap:wrap}
+.sw button{width:38px;height:38px;border-radius:50%;border:var(--line);cursor:pointer}
+.sw button.sel{outline:3px solid var(--ink);outline-offset:3px}
+
+footer{border-top:var(--line);padding:18px 0 28px;background:var(--paper2)}
+.foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.foot .logo{width:42px;height:42px;border-radius:13px}
+.foot .logo svg{width:28px;height:28px}
+.sigline{font-weight:700}
+.sigline span{color:var(--brand)}
+.watermark{position:fixed;left:-60px;bottom:-60px;width:300px;height:300px;color:var(--brand);opacity:.05;pointer-events:none;z-index:0}
+svg text{font-family:'Baloo Bhaijaan 2',sans-serif}
+.mono{font-family:'JetBrains Mono',monospace}
+.flow{stroke-dasharray:10 12;animation:dash 1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-22}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- البصمة: بصمة إصبع خطوطها مسارات دوائر -->
+    <symbol id="print" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
+        <path d="M12 40 C9 28 14 15 27 9 C39 4 52 10 56 21"/>
+        <path d="M19 51 C13 42 14 27 24 19 C34 12 47 15 51 27"/>
+        <path d="M26 55 C20 46 21 31 30 25 C39 20 47 27 46 35 L46 43"/>
+        <path d="M33 57 C28 49 28 37 33 32 C38 28 41 33 40 39 L40 50"/>
+      </g>
+      <g fill="currentColor"><circle cx="56" cy="21" r="3.4"/><circle cx="51" cy="27" r="3.4"/><circle cx="46" cy="43" r="3.6"/><circle cx="40" cy="50" r="3.6"/><circle cx="12" cy="40" r="3"/></g>
+    </symbol>
+    <!-- شرارة: الدليل -->
+    <symbol id="mascot" viewBox="0 0 100 112">
+      <path d="M55 2 L39 30 L50 30 L43 48 L66 20 L54 20 L62 2Z" fill="#FFC531" stroke="#1B2547" stroke-width="3.5" stroke-linejoin="round"/>
+      <rect x="12" y="42" width="76" height="64" rx="28" fill="#FFC531" stroke="#1B2547" stroke-width="4"/>
+      <rect x="24" y="56" width="52" height="30" rx="15" fill="#1B2547"/>
+      <circle cx="39" cy="71" r="6.5" fill="#7CF5E6"/><circle cx="61" cy="71" r="6.5" fill="#7CF5E6"/>
+      <circle cx="41" cy="69" r="2" fill="#fff"/><circle cx="63" cy="69" r="2" fill="#fff"/>
+      <path d="M41 94 Q50 100 59 94" stroke="#1B2547" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle cx="22" cy="92" r="4" fill="#FF8E7A"/><circle cx="78" cy="92" r="4" fill="#FF8E7A"/>
+    </symbol>
+    <linearGradient id="cu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F8BE86"/><stop offset=".5" stop-color="#D2783A"/><stop offset="1" stop-color="#8E4518"/></linearGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F1F3F8"/><stop offset=".5" stop-color="#B9BFCE"/><stop offset="1" stop-color="#8A91A3"/></linearGradient>
+    <radialGradient id="glowY"><stop offset="0" stop-color="#FFF6B0"/><stop offset=".4" stop-color="#FFD84D" stop-opacity=".8"/><stop offset="1" stop-color="#FFC531" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowR"><stop offset="0" stop-color="#FFE0DA"/><stop offset=".4" stop-color="#FF5A47" stop-opacity=".75"/><stop offset="1" stop-color="#FF5A47" stop-opacity="0"/></radialGradient>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#14A89A"/></marker>
+  </defs>
+</svg>
+<svg class="watermark"><use href="#print"/></svg>
+
+<header class="top">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo"><svg><use href="#print"/></svg></div>
+      <div>
+        <div class="brand-name" id="bName">مختبر الشرارة</div>
+        <div class="brand-tag" id="bTag">من السلك… إلى الروبوت</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="stars-pill">⭐ <span id="starCount">0</span> / <span id="starTot">10</span></div>
+      <button class="btn" id="brandBtn" title="أضف اسمك وألوانك">✎ بصمتي</button>
+    </div>
+    <nav class="track" id="track"></nav>
+  </div>
+</header>
+
+<main class="wrap" style="position:relative;z-index:1">
+
+<!-- ================= HOME ================= -->
+<section class="view" id="v-home">
+  <div class="hero">
+    <div>
+      <span class="eyebrow">رحلة تعليمية للأطفال · ١١ محطة</span>
+      <h1>من سلك صغير…<br>إلى محرك يدور بأمرك! ⚡</h1>
+      <p class="lead">سنكتشف معاً ما هي الكهرباء، ولماذا يصبح السلك الملفوف مغناطيساً، وكيف تسير الفولتية في الدائرة، ثم نبرمج الأردوينو لنحرّك <b>محرك الخطوة</b> في مشروعنا الأول.</p>
+      <div class="controls"><button class="btn primary" onclick="go('wire')">ابدأ الرحلة ←</button><button class="btn" onclick="go('lab')">اذهب للمختبر 🔬</button></div>
+    </div>
+    <div class="card" style="display:flex;gap:14px;align-items:center">
+      <svg style="width:120px;height:134px;flex:none" class="m bob"><use href="#mascot"/></svg>
+      <div><h3 style="margin-top:0">أهلاً! أنا «شرارة» 👋</h3><p style="margin:0">سأرافقك في كل محطة. جرّب كل زر، واكسب نجمة ⭐ في نهاية كل درس بالإجابة عن سؤال صغير.</p></div>
+    </div>
+  </div>
+  <div class="map" id="map"></div>
+</section>
+
+<!-- ================= 1 WIRE ================= -->
+<section class="view" id="v-wire">
+  <span class="eyebrow">المحطة ١</span>
+  <h2>السلك: هل هو جهاز؟ 🤔</h2>
+  <p class="lead">السلك مصنوع من النحاس، وفي داخله ملايين الجسيمات الصغيرة اسمها <b>الإلكترونات</b>. لنكبّر السلك ونرَ ماذا يحدث داخله.</p>
+  <div class="stage"><svg id="s1" viewBox="0 0 720 300"></svg></div>
+  <div class="controls">
+    <button class="btn primary" id="l1bat">🔋 صِل البطارية</button>
+    <span class="ctl">🔍 الإلكترونات: النقاط الصفراء</span>
+  </div>
+  <div class="guide"><svg class="m bob"><use href="#mascot"/></svg><div class="bubble" id="b1"></div></div>
+  <h3>إذن… ما الفرق بين السلك والجهاز؟</h3>
+  <div class="compare">
+    <div class="c hl"><div class="ic">〰️</div><b>السلك</b><br>طريق تسير فيه الكهرباء. لا يحوّلها لشيء آخر.</div>
+    <div class="c"><div class="ic">💡</div><b>المصباح</b><br>جهاز: كهرباء ← ضوء</div>
+    <div class="c"><div class="ic">⚙️</div><b>المحرك</b><br>جهاز: كهرباء ← حركة</div>
+    <div class="c"><div class="ic">🔔</div><b>الجرس</b><br>جهاز: كهرباء ← صوت</div>
+  </div>
+  <div class="tip">⚠️ <b>تنبيه مهم:</b> لا تصل سلكاً وحده بين طرفي بطارية في الحقيقة! يسمى هذا <b>قِصَر</b>؛ يسخن السلك جداً وتتلف البطارية. في البرنامج فقط نجرّب بأمان.</div>
+  <div class="quiz" data-quiz="wire"></div>
+  <div class="nextrow"><button class="btn" onclick="go('home')">→ الخريطة</button><button class="btn primary" onclick="go('coil')">المحطة التالية ←</button></div>
+</section>
+
+<!-- ================= 2 COIL ================= -->
+<section class="view" id="v-coil">
+  <span class="eyebrow">المحطة ٢</span>
+  <h2>ماذا لو لففنا السلك وجعلناه ملفاً؟ 🌀</h2>
+  <p class="lead">حرّك المؤشر لتلفّ السلك، ثم صِل البطارية. راقب البوصلة ومشابك الورق!</p>
+  <div class="stage"><svg id="s2" viewBox="0 0 720 320"></svg></div>
+  <div class="controls">
+    <label class="ctl">عدد اللفات <input type="range" id="l2turns" min="0" max="12" value="0"><b id="l2tv">0</b></label>
+    <button class="btn primary" id="l2bat">🔋 صِل البطارية</button>
+    <button class="btn" id="l2core">🔩 أدخل مسماراً حديدياً</button>
+  </div>
+  <div class="guide"><svg class="m bob"><use href="#mascot"/></svg><div class="bubble" id="b2"></div></div>
+  <div class="tip">💡 <b>هل تعلم؟</b> الكهرباء التي تمر في ملف تصنع حوله <b>مجالاً مغناطيسياً</b> (الخطوط الخضراء). هذا هو سر الأجراس والسماعات… و<b>محرك الخطوة</b> الذي سنبرمجه في النهاية!</div>
+  <div class="quiz" data-quiz="coil"></div>
+  <div class="nextrow"><button class="btn" onclick="go('wire')">→ السابقة</button><button class="btn primary" onclick="go('circuit')">المحطة التالية ←</button></div>
+</section>
+
+<!-- ================= 3 CIRCUIT ================= -->
+<section class="view" id="v-circuit">
+  <span class="eyebrow">المحطة ٣</span>
+  <h2>الدائرة الكهربائية ومؤشر الفولتية 🔋➡️💡</h2>
+  <p class="lead">الفولتية تشبه <b>ضغط الماء</b> في الأنبوب. البطارية مضخة ترفع الضغط، وكل عنصر في الطريق يستهلك جزءاً منه. اربط البطارية وتابع <b>مؤشر الفولتية</b> وهو يسير!</p>
+  <div class="stage"><svg id="s3" viewBox="0 0 720 380"></svg></div>
+  <div class="stage" style="margin-top:10px"><svg id="s3g" viewBox="0 0 720 120"></svg></div>
+  <div class="controls">
+    <button class="btn primary" id="l3bat">🔋 اربط البطارية</button>
+    <label class="ctl">البطارية <select id="l3v"><option>1.5</option><option>3</option><option selected>4.5</option><option>6</option><option>9</option></select> فولت</label>
+    <label class="ctl">المقاومة <input type="range" id="l3r" min="0" max="8" value="4"><b id="l3rv">220Ω</b></label>
+    <label class="ctl">لون الـLED <select id="l3c"><option value="red">أحمر</option><option value="green">أخضر</option><option value="blue">أزرق</option></select></label>
+    <button class="btn" id="l3reset">🔧 LED جديد</button>
+  </div>
+  <div class="readout">
+    <div class="meter"><small>التيار (سرعة السير)</small><b id="r3i">0 mA</b></div>
+    <div class="meter"><small>فولتية تأخذها المقاومة</small><b id="r3vr">0 V</b></div>
+    <div class="meter"><small>فولتية يأخذها الـLED</small><b id="r3vl">0 V</b></div>
+    <div class="meter"><small>المؤشر الآن</small><b id="r3m">0 V</b></div>
+  </div>
+  <div class="guide"><svg class="m bob"><use href="#mascot"/></svg><div class="bubble" id="b3"></div></div>
+  <div class="tip">📏 <b>قانون أوم ببساطة:</b> التيار = الفولتية ÷ المقاومة. مقاومة أكبر ← تيار أقل ← ضوء أخفت. مقاومة صغيرة جداً ← تيار كبير ← 💥 يحترق الـLED. جرّب!</div>
+  <div class="quiz" data-quiz="circuit"></div>
+  <div class="nextrow"><button class="btn" onclick="go('coil')">→ السابقة</button><button class="btn primary" onclick="go('induction')">المحطة التالية ←</button></div>
+</section>
+
+<!-- ================= 4 INDUCTION ================= -->
+<section class="view" id="v-induction">
+  <span class="eyebrow">المحطة ٤</span>
+  <h2>ملفان متجاوران: ما الذي ينتقل بينهما؟ ✨</h2>
+  <p class="lead">الملف الأول موصول ببطارية. الملف الثاني موصول بمصباح فقط، <b>ولا يوجد أي سلك بينهما!</b> قرّبهما وأغلق المفتاح وراقب.</p>
+  <div class="stage"><svg id="s4" viewBox="0 0 720 340"></svg></div>
+  <div class="controls">
+    <label class="ctl">المسافة: قريب <input type="range" id="l4d" min="0" max="100" value="15"> بعيد</label>
+    <button class="btn on" id="l4dc">⎓ مفتاح عادي</button>
+    <button class="btn" id="l4ac">∿ تيار متناوب</button>
+    <button class="btn primary" id="l4sw">أغلق المفتاح</button>
+  </div>
+  <div class="guide"><svg class="m bob"><use href="#mascot"/></svg><div class="bubble" id="b4"></div></div>
+  <div class="tip">🔁 <b>السر:</b> الإلكترونات لا تقفز بين الملفين. الذي ينتقل هو <b>المجال المغناطيسي</b> وهو يحمل الطاقة عبر الهواء، لكنه يصنع كهرباء في الملف الثاني <b>فقط عندما يتغيّر</b>. هكذا تعمل <b>المحوّلات</b> و<b>شواحن الهاتف اللاسلكية</b>.</div>
+  <div class="quiz" data-quiz="induction"></div>
+  <div class="nextrow"><button class="btn" onclick="go('circuit')">→ السابقة</button><button class="btn primary" onclick="go('lab')">المحطة التالية ←</button></div>
+</section>
+
+<!-- ================= 5 LAB ================= -->
+<section class="view" id="v-lab">
+  <span class="eyebrow">المحطة ٥</span>
+  <h2>مختبر العناصر: ابنِ دائرتك بنفسك 🔬</h2>
+  <p class="lead"><b>١)</b> اختر عنصراً من الصندوق. <b>٢)</b> اضغط على خانة فارغة في الدائرة لتضعه. اضغط على عنصر موضوع لإزالته (أو لفتح/إغلاق المفتاح).</p>
+  <div class="tray" id="tray"></div>
+  <div class="stage"><svg id="s5" viewBox="0 0 720 400"></svg></div>
+  <div class="controls">
+    <span class="ctl">عدد البطاريات:
+      <button class="btn" data-nb="1">1</button><button class="btn on" data-nb="2">2</button><button class="btn" data-nb="3">3</button><button class="btn" data-nb="4">4</button>
+      <b id="l5v">3.0V</b></span>
+    <button class="btn" id="l5clear">🧹 إفراغ الدائرة</button>
+    <button class="btn yellow" id="l5ex">✨ مثال جاهز</button>
+  </div>
+  <div class="readout">
+    <div class="meter"><small>الفولتية الكلية</small><b id="r5v">3.0 V</b></div>
+    <div class="meter"><small>التيار</small><b id="r5i">0 mA</b></div>
+    <div class="meter"><small>حالة الدائرة</small><b id="r5s" style="font-family:inherit;font-size:19px">مفتوحة</b></div>
+  </div>
+  <div class="guide"><svg class="m bob"><use href="#mascot"/></svg><div class="bubble" id="b5"></div></div>
+  <h3>📚 موسوعة العناصر — اضغط على أي بطاقة</h3>
+  <div class="enc" id="enc"></div>
+  <div class="quiz" data-quiz="lab"></div>
+  <div class="nextrow"><button class="btn" onclick="go('induction')">→ السابقة</button><button class="btn primary" onclick="go('breadboard')">المحطة التالية ←</button></div>
+</section>
+
+<!-- ================= 6 BREADBOARD ================= -->
+<section class="view" id="v-breadboard">
+  <span class="eyebrow">المحطة ٦</span>
+  <h2>لوحة التجارب: أين تختبئ الأسلاك؟ 🕵️</h2>
+  <p class="lead">لوحة التجارب مليئة بالثقوب، لكن تحتها <b>شرائط معدنية مخفية</b> تصل بعض الثقوب ببعض. <b>اضغط على أي ثقب</b> لترى الثقوب المتصلة به!</p>
+  <div class="stage"><svg id="s6b" viewBox="0 0 720 400"></svg></div>
+  <div class="controls">
+    <button class="btn" id="bbExplore">🔍 وضع الاستكشاف</button>
+    <button class="btn primary" id="bbNext">➕ الخطوة التالية في التركيب</button>
+    <button class="btn" id="bbAll">ركّب الكل</button>
+    <button class="btn yellow" id="bbRun" disabled>▶ شغّل (الطرف 13)</button>
+    <button class="btn" id="bbMistake">🙈 جرّب خطأً شائعاً</button>
+  </div>
+  <ol class="check" id="bbSteps" style="counter-reset:none"></ol>
+  <div class="guide"><svg class="m bob"><use href="#mascot"/></svg><div class="bubble" id="b6b"></div></div>
+  <div class="tip">🧩 <b>القاعدة الذهبية:</b> الثقوب الخمسة في <b>العمود نفسه</b> (في النصف نفسه) متصلة معاً. أما الخطوط الطويلة الحمراء والزرقاء على الأطراف فهي <b>خطوط الطاقة</b>: كل الصف متصل. والفجوة في المنتصف تفصل النصفين.</div>
+  <div class="quiz" data-quiz="breadboard"></div>
+  <div class="nextrow"><button class="btn" onclick="go('lab')">→ السابقة</button><button class="btn primary" onclick="go('arduino')">المحطة التالية ←</button></div>
+</section>
+
+<!-- ================= 7 ARDUINO ================= -->
+<section class="view" id="v-arduino">
+  <span class="eyebrow">المحطة ٧</span>
+  <h2>تعرّف على الأردوينو: العقل الصغير 🧠</h2>
+  <p class="lead">الأردوينو حاسوب صغير جداً. نكتب له أوامر، فيُخرج من أطرافه <b>5 فولت</b> (تشغيل) أو <b>0 فولت</b> (إطفاء). اضغط على أجزاء اللوحة لتتعرف عليها.</p>
+  <div class="grid2">
+    <div>
+      <div class="stage"><svg id="s6" viewBox="0 0 720 380"></svg></div>
+      <div class="explain" id="l6info"><b>👆 اضغط على أي جزء ملوّن من اللوحة.</b></div>
+    </div>
+    <div>
+      <h3 style="margin-top:0">أول كود: تشغيل وإطفاء الضوء</h3>
+      <div class="code" id="l6code"></div>
+      <div class="controls">
+        <label class="ctl">مدة التشغيل <input type="number" id="l6on" value="500" min="50" max="3000" step="50" style="width:80px"> ms</label>
+        <label class="ctl">مدة الإطفاء <input type="number" id="l6off" value="500" min="50" max="3000" step="50" style="width:80px"> ms</label>
+        <button class="btn primary" id="l6run">▶ شغّل</button>
+      </div>
+      <div class="explain" id="l6exp">🟢 <b>setup()</b> تعمل مرة واحدة عند التشغيل. 🔁 <b>loop()</b> تتكرر إلى الأبد.</div>
+    </div>
+  </div>
+  <h3>🛠️ تجهيز الأردوينو على الحاسوب</h3>
+  <div class="grid3">
+    <div class="card"><b>١. نزّل البرنامج</b><br>حمّل <b>Arduino IDE</b> مجاناً من موقع arduino.cc وثبّته.</div>
+    <div class="card"><b>٢. صِل اللوحة</b><br>استخدم كابل USB. سيضيء ضوء <b>ON</b> الأخضر.</div>
+    <div class="card"><b>٣. اختر اللوحة والمنفذ</b><br>من <span class="mono">Tools › Board</span> اختر <b>Arduino Uno</b>، ومن <span class="mono">Port</span> اختر المنفذ.</div>
+    <div class="card"><b>٤. اكتب الكود</b><br>كل أمر ينتهي بفاصلة منقوطة <span class="mono">;</span> — لا تنسها!</div>
+    <div class="card"><b>٥. ارفع الكود</b><br>اضغط زر السهم <b>→ Upload</b> وانتظر رسالة <span class="mono">Done uploading</span>.</div>
+    <div class="card"><b>٦. شاهد النتيجة!</b><br>إذا ظهر خطأ أحمر، اقرأ رقم السطر وابحث عن الفاصلة المنسية 😉</div>
+  </div>
+  <div class="quiz" data-quiz="arduino"></div>
+  <div class="nextrow"><button class="btn" onclick="go('breadboard')">→ السابقة</button><button class="btn primary" onclick="go('stepper')">المحطة التالية ←</button></div>
+</section>
+
+<!-- ================= 7 STEPPER ================= -->
+<section class="view" id="v-stepper">
+  <span class="eyebrow">المحطة ٨</span>
+  <h2>داخل محرك الخطوة 🔍⚙️</h2>
+  <p class="lead">تذكّر المحطة ٢: <b>ملف + كهرباء = مغناطيس</b>. محرك الخطوة فيه عدة ملفات حول مغناطيس يدور. كلما شغّلنا ملفاً، ينجذب المغناطيس نحوه <b>خطوة</b>. اضغط على الملفات بنفسك!</p>
+  <div class="grid2">
+    <div class="stage"><svg id="s7" viewBox="0 0 720 380"></svg></div>
+    <div>
+      <table class="seq" id="seq"></table>
+      <div class="controls">
+        <button class="btn primary" id="l7auto">▶ تشغيل تلقائي</button>
+        <button class="btn" id="l7dir">↻ مع عقارب الساعة</button>
+        <button class="btn" id="l7mode">نمط: خطوة كاملة</button>
+        <label class="ctl">السرعة <input type="range" id="l7spd" min="1" max="12" value="3"></label>
+      </div>
+      <div class="readout">
+        <div class="meter"><small>الخطوات</small><b id="r7s">0</b></div>
+        <div class="meter"><small>عمود الإخراج (28BYJ-48)</small><b id="r7o">0°</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="guide"><svg class="m bob"><use href="#mascot"/></svg><div class="bubble" id="b7"></div></div>
+  <div class="tip">🧮 <b>في المحرك الحقيقي 28BYJ-48:</b> يوجد داخله صندوق تروس يبطّئ الحركة، لذلك يحتاج نحو <b>2048 خطوة</b> ليكمل لفة واحدة كاملة. لهذا هو دقيق جداً — ممتاز للروبوتات!</div>
+  <div class="quiz" data-quiz="stepper"></div>
+  <div class="nextrow"><button class="btn" onclick="go('arduino')">→ السابقة</button><button class="btn primary" onclick="go('project')">المحطة التالية ←</button></div>
+</section>
+
+<!-- ================= 8 PROJECT ================= -->
+<section class="view" id="v-project">
+  <span class="eyebrow">المحطة ٩ · المشروع الأول</span>
+  <h2>لنحرّك محرك الخطوة بالأردوينو! 🚀</h2>
+  <p class="lead">نحتاج: <b>أردوينو أونو</b> + <b>لوحة تشغيل ULN2003</b> + <b>محرك 28BYJ-48 (5V)</b> + <b>6 أسلاك توصيل</b> + <b>كابل USB</b>. لماذا لوحة التشغيل؟ لأن الأردوينو صغير لا يستطيع إعطاء المحرك تياراً كافياً، فاللوحة تعمل مثل «مكبّر عضلات».</p>
+  <div class="grid2">
+    <div>
+      <div class="stage"><svg id="s8" viewBox="0 0 720 380"></svg></div>
+      <h3>🔌 خطوات التوصيل</h3>
+      <ul class="check" id="check"></ul>
+      <div class="controls"><button class="btn" id="l8all">وصّل الكل دفعة واحدة</button><button class="btn" id="l8undo">افصل الكل</button></div>
+    </div>
+    <div>
+      <h3 style="margin-top:0">💻 الكود (اضغط أي سطر لشرحه)</h3>
+      <div class="code" id="l8code"></div>
+      <div class="explain" id="l8exp">👆 اضغط على أي سطر في الكود.</div>
+      <div class="controls">
+        <label class="ctl">السرعة <input type="number" id="l8rpm" value="10" min="1" max="25" style="width:64px"> لفة/دقيقة</label>
+        <label class="ctl">الحركة <select id="l8steps"><option value="512">ربع لفة</option><option value="1024">نصف لفة</option><option value="2048" selected>لفة كاملة</option><option value="4096">لفتان</option></select></label>
+        <label class="ctl"><input type="checkbox" id="l8fast"> عرض سريع ×4</label>
+        <label class="ctl"><input type="checkbox" id="l8wrong"> جرّب خطأ ترتيب الأطراف</label>
+      </div>
+      <div class="controls"><button class="btn primary" id="l8up">⬆ ارفع الكود وشغّل</button><button class="btn" id="l8stop">⏹ إيقاف</button><button class="btn" id="l8copy">📋 انسخ الكود</button></div>
+      <div class="progress"><i id="l8bar"></i></div>
+      <p style="margin:8px 0 4px;font-weight:700">الشاشة التسلسلية (Serial Monitor)</p>
+      <div class="serial" id="serial"></div>
+    </div>
+  </div>
+  <div class="guide"><svg class="m bob"><use href="#mascot"/></svg><div class="bubble" id="b8"></div></div>
+  <div class="tip">🧯 <b>للسلامة:</b> افصل كابل USB قبل تغيير أي سلك. وإذا سخن المحرك أو اهتز دون أن يدور، خفّض السرعة إلى 10 وتأكد من ترتيب الأطراف <span class="mono">8, 10, 9, 11</span>.</div>
+  <div class="quiz" data-quiz="project"></div>
+  <div class="nextrow"><button class="btn" onclick="go('stepper')">→ السابقة</button><button class="btn primary" onclick="go('challenges')">المحطة التالية: التحديات ←</button></div>
+</section>
+
+<!-- ================= 10 CHALLENGES ================= -->
+<section class="view" id="v-challenges">
+  <span class="eyebrow">المحطة ١٠</span>
+  <h2>تحديات المبرمج الصغير 🧩</h2>
+  <p class="lead">الآن أنت المبرمج! في كل تحدٍّ يوجد <b>فراغ ملوّن</b> في الكود. اختر القيمة الصحيحة واضغط <b>«جرّب»</b> لترى المحرك ينفّذ أوامرك. حلّ التحديات الأربعة لتكسب النجمة الأخيرة ⭐</p>
+  <div class="chs" id="chs"></div>
+  <div class="guide"><svg class="m bob"><use href="#mascot"/></svg><div class="bubble" id="b10"></div></div>
+  <div class="nextrow"><button class="btn" onclick="go('project')">→ السابقة</button><button class="btn primary" onclick="go('cert')">احصل على شهادتك ←</button></div>
+</section>
+
+<!-- ================= 11 CERT ================= -->
+<section class="view" id="v-cert">
+  <span class="eyebrow">المحطة ١١</span>
+  <h2>شهادة المهندس الصغير 🏅</h2>
+  <div class="controls"><label class="ctl">اكتب اسمك: <input id="kidName" style="font-family:inherit;font-size:18px;border:2px solid var(--ink);border-radius:8px;padding:2px 8px;background:var(--paper);width:200px" placeholder="اسم البطل"></label></div>
+  <div class="cert" id="certCard">
+    <svg class="wm"><use href="#print"/></svg>
+    <div style="display:flex;justify-content:center;align-items:center;gap:12px">
+      <div class="logo"><svg><use href="#print"/></svg></div>
+      <div style="text-align:right"><div class="brand-name cB"></div><div class="brand-tag cT"></div></div>
+    </div>
+    <h2>شهادة المهندس الصغير</h2>
+    <p>تُمنح هذه الشهادة إلى</p>
+    <div class="kid" id="certKid">اسم البطل</div>
+    <p style="max-width:560px;margin:14px auto">لأنه أكمل «رحلة الشرارة» من السلك والملف والدائرة الكهربائية… حتى برمج الأردوينو وحرّك <b>محرك الخطوة</b> بنفسه.</p>
+    <div style="font-size:30px" id="certStars"></div>
+    <div class="sig">
+      <div><b id="certDate"></b><div class="lineS">التاريخ</div></div>
+      <svg style="width:90px;height:100px"><use href="#mascot"/></svg>
+      <div><b class="cS"></b><div class="lineS">التوقيع</div></div>
+    </div>
+  </div>
+  <p style="text-align:center;color:var(--ink2)">📸 خذ لقطة شاشة للشهادة واحتفظ بها!</p>
+  <div class="nextrow"><button class="btn" onclick="go('challenges')">→ السابقة</button><button class="btn primary" onclick="go('home')">العودة للخريطة</button></div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="logo"><svg><use href="#print"/></svg></div>
+    <div>
+      <div class="sigline">صُمّم بواسطة: <span class="fS"></span></div>
+      <div style="font-size:14px;color:var(--ink2)"><span class="fB"></span> · رحلة الشرارة التعليمية</div>
+    </div>
+  </div>
+</footer>
+
+<!-- Brand modal -->
+<div class="modal" id="modal">
+  <div class="card">
+    <h3 style="margin-top:0">✎ بصمتي البصرية</h3>
+    <p style="font-size:15px;color:var(--ink2);margin-top:0">تظهر في الأعلى، والتذييل، وتوقيع الشهادة.</p>
+    <div class="field"><label>اسم المشروع / الأكاديمية</label><input id="fName"></div>
+    <div class="field"><label>الشعار النصي</label><input id="fTag"></div>
+    <div class="field"><label>اسم المعلّم / المصمّم (التوقيع)</label><input id="fSig"></div>
+    <div class="field"><label>لون البصمة</label><div class="sw" id="sw"></div></div>
+    <div class="controls" style="justify-content:flex-end"><button class="btn" id="mCancel">إلغاء</button><button class="btn primary" id="mSave">حفظ</button></div>
+  </div>
+</div>
+
+<script>
+/* ============ helpers ============ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)), lerp=(a,b,t)=>a+(b-a)*t;
+const ar=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+function makePath(pts){const segs=[];let L=0;for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1],l=Math.hypot(b[0]-a[0],b[1]-a[1]);segs.push({a,b,l,s0:L});L+=l}
+  return{L,segs,at(s){s=((s%L)+L)%L;for(const g of segs){if(s<=g.s0+g.l){const u=g.l?(s-g.s0)/g.l:0;return[g.a[0]+(g.b[0]-g.a[0])*u,g.a[1]+(g.b[1]-g.a[1])*u]}}return pts[0]}}}
+function mixHex(a,b,t){const pa=[1,3,5].map(i=>parseInt(a.substr(i,2),16)),pb=[1,3,5].map(i=>parseInt(b.substr(i,2),16));return'#'+pa.map((v,i)=>Math.round(lerp(v,pb[i],t)).toString(16).padStart(2,'0')).join('')}
+function voltColor(f){f=clamp(f,0,1);const st=['#3C78F0','#14A89A','#FFC531','#FF6B57'];const x=f*3,i=Math.min(2,Math.floor(x));return mixHex(st[i],st[i+1],x-i)}
+function say(id,txt,mood){const b=$('#'+id);if(b.dataset.t===txt)return;b.dataset.t=txt;b.innerHTML=txt;b.classList.toggle('warn',mood==='warn');b.classList.toggle('good',mood==='good')}
+function coilPaths(x0,x1,cy,ry,n){const back=[],front=[];const st=(x1-x0)/n,k=ry*.38;
+  for(let i=0;i<n;i++){const x=x0+i*st,m=x+st/2;
+    front.push(`M${x},${cy-ry} C${x-k},${cy-ry*.4} ${m-k},${cy+ry*.4} ${m},${cy+ry}`);
+    back.push(`M${m},${cy+ry} C${m+k},${cy+ry*.4} ${x+st+k},${cy-ry*.4} ${x+st},${cy-ry}`)}
+  return{back,front}}
+function battery(g,x,y,vertical,label){ // draws a battery centred at x,y
+  const gg=el('g',{transform:`translate(${x},${y}) rotate(${vertical?-90:0})`},g);
+  el('rect',{x:-38,y:-20,width:76,height:40,rx:8,fill:'#1B2547',stroke:'#1B2547','stroke-width':2.5},gg);
+  el('rect',{x:4,y:-20,width:34,height:40,rx:0,fill:'#FFC531'},gg);
+  el('rect',{x:-38,y:-20,width:76,height:40,rx:8,fill:'none',stroke:'#1B2547','stroke-width':2.5},gg);
+  el('rect',{x:38,y:-7,width:7,height:14,rx:2,fill:'#9aa1b5',stroke:'#1B2547','stroke-width':2},gg);
+  const rt=vertical?'rotate(90)':'';
+  const t1=el('text',{x:0,y:0,transform:`translate(24,0) ${rt} translate(0,7)`,'text-anchor':'middle','font-size':20,'font-weight':800,fill:'#1B2547'},gg);t1.textContent='+';
+  const t2=el('text',{x:0,y:0,transform:`translate(-24,0) ${rt} translate(0,7)`,'text-anchor':'middle','font-size':22,'font-weight':800,fill:'#fff'},gg);t2.textContent='−';
+  if(label){const t=el('text',{x:0,y:vertical?-28:36,'text-anchor':'middle','font-size':15,'font-weight':700,fill:'#1B2547',transform:vertical?'rotate(90) translate(0,0)':''},gg);t.textContent=label}
+  return gg}
+
+/* ============ parts icons (horizontal, centred 0,0, ~84 wide) ============ */
+function partSVG(type,o={}){
+  const lead='<line x1="-42" y1="0" x2="42" y2="0" stroke="#1B2547" stroke-width="3.5"/>';
+  switch(type){
+  case 'wire':return '<line x1="-42" y1="0" x2="42" y2="0" stroke="#D2783A" stroke-width="6" stroke-linecap="round"/>';
+  case 'r100':case 'r1k':case 'res':{const bands=type==='r1k'?['#7a4a1d','#1B2547','#FF6B57']:type==='r100'?['#7a4a1d','#1B2547','#7a4a1d']:['#FF6B57','#FF6B57','#7a4a1d'];
+    return lead+`<rect x="-22" y="-10" width="44" height="20" rx="9" fill="#E9CFA0" stroke="#1B2547" stroke-width="2.5"/>`+bands.map((c,i)=>`<rect x="${-13+i*9}" y="-10" width="5" height="20" fill="${c}"/>`).join('')+`<rect x="12" y="-10" width="4" height="20" fill="#C9A23A"/>`}
+  case 'ledR':case 'ledG':case 'ledB':{const col={ledR:'#FF4D3D',ledG:'#2BD46B',ledB:'#3C78F0'}[type];const b=o.burnt?0:(o.glow||0);
+    return lead+(b>0?`<circle r="${26+b*10}" fill="${col}" opacity="${.25+.45*b}" filter="url(#soft)"/>`:'')+
+      `<path d="M-14 10 V-4 A14 14 0 0 1 14 -4 V10 Z" fill="${o.burnt?'#3b3b45':col}" stroke="#1B2547" stroke-width="2.5" opacity="${o.burnt?1:.55+.45*b}"/><rect x="-17" y="9" width="34" height="5" rx="2" fill="${o.burnt?'#3b3b45':col}" stroke="#1B2547" stroke-width="2"/>`+
+      (o.burnt?'<path d="M-8 -6 L8 6 M8 -6 L-8 6" stroke="#FFC531" stroke-width="3"/>':'<path d="M-5 -2 L-2 4 L2 -2" stroke="#fff" stroke-width="1.6" fill="none" opacity=".8"/>')}
+  case 'diode':return lead+'<rect x="-20" y="-9" width="40" height="18" rx="4" fill="#2a2f45" stroke="#1B2547" stroke-width="2"/><rect x="10" y="-9" width="5" height="18" fill="#d9dce6"/>';
+  case 'lamp':{const b=o.glow||0;return lead+(b>0?`<circle r="${22+b*16}" fill="url(#glowY)" opacity="${.4+.6*b}"/>`:'')+`<circle r="16" fill="${b>0?'#FFF3B0':'#EEF2FA'}" stroke="#1B2547" stroke-width="2.5"/><path d="M-7 4 Q-3 -8 0 4 Q3 -8 7 4" stroke="${b>0?'#FF8A00':'#6b7290'}" stroke-width="2" fill="none"/>`}
+  case 'motor':return lead+'<circle r="18" fill="url(#steel)" stroke="#1B2547" stroke-width="2.5"/><g class="rot"><line x1="0" y1="0" x2="0" y2="-13" stroke="#FF6B57" stroke-width="4" stroke-linecap="round"/><circle r="4" fill="#1B2547"/></g><text x="0" y="31" text-anchor="middle" font-size="12" font-weight="800" fill="#1B2547">M</text>';
+  case 'buzzer':return lead+'<g class="bz"><circle r="17" fill="#1B2547" stroke="#1B2547" stroke-width="2"/><circle r="4" fill="#666c85"/></g><text class="notes" x="14" y="-16" font-size="16" fill="#8A5CF6" opacity="0">♪♫</text>';
+  case 'switch':{const on=o.on;return '<line x1="-42" y1="0" x2="-18" y2="0" stroke="#1B2547" stroke-width="3.5"/><line x1="18" y1="0" x2="42" y2="0" stroke="#1B2547" stroke-width="3.5"/><circle cx="-18" cy="0" r="5" fill="#fff" stroke="#1B2547" stroke-width="2.5"/><circle cx="18" cy="0" r="5" fill="#fff" stroke="#1B2547" stroke-width="2.5"/>'+
+    `<line x1="-18" y1="0" x2="${on?18:12}" y2="${on?0:-20}" stroke="${on?'#14A89A':'#FF6B57'}" stroke-width="5" stroke-linecap="round"/>`}
+  case 'battery':return '<rect x="-30" y="-14" width="60" height="28" rx="6" fill="#1B2547"/><rect x="4" y="-14" width="26" height="28" fill="#FFC531"/><rect x="30" y="-6" width="6" height="12" fill="#9aa1b5"/><text x="17" y="6" text-anchor="middle" font-size="16" font-weight="800">+</text>';
+  case 'cap':return lead+'<rect x="-12" y="-18" width="24" height="34" rx="6" fill="#3C78F0" stroke="#1B2547" stroke-width="2.5"/><rect x="4" y="-18" width="5" height="34" fill="#9CC0FF"/>';
+  case 'transistor':return '<line x1="-12" y1="10" x2="-12" y2="22" stroke="#1B2547" stroke-width="3"/><line x1="0" y1="10" x2="0" y2="22" stroke="#1B2547" stroke-width="3"/><line x1="12" y1="10" x2="12" y2="22" stroke="#1B2547" stroke-width="3"/><path d="M-18 10 V-6 A18 18 0 0 1 18 -6 V10 Z" fill="#1B2547"/>';
+  case 'breadboard':{let s='<rect x="-44" y="-20" width="88" height="40" rx="5" fill="#F4F4F0" stroke="#1B2547" stroke-width="2"/>';for(let i=0;i<10;i++)for(let j=0;j<4;j++)s+=`<rect x="${-38+i*8}" y="${-13+j*7+(j>1?4:0)}" width="3" height="3" fill="#555"/>`;return s}
+  case 'jumper':return '<path d="M-40 8 C-10 -24 10 24 40 -8" stroke="#FF6B57" stroke-width="4" fill="none"/><path d="M-40 14 C-10 -14 12 30 40 0" stroke="#3C78F0" stroke-width="4" fill="none"/><path d="M-40 -2 C-14 -30 10 16 40 -16" stroke="#2BD46B" stroke-width="4" fill="none"/>';
+  case 'arduino':return '<rect x="-38" y="-20" width="76" height="40" rx="5" fill="#1C7FA6" stroke="#1B2547" stroke-width="2"/><rect x="-44" y="-12" width="12" height="12" fill="#c9ced8"/><rect x="-8" y="-4" width="34" height="9" fill="#1B2547"/><rect x="-26" y="-18" width="58" height="4" fill="#1B2547"/><rect x="-20" y="14" width="50" height="4" fill="#1B2547"/>';
+  case 'uln':return '<rect x="-34" y="-20" width="68" height="40" rx="4" fill="#2E9D5B" stroke="#1B2547" stroke-width="2"/><rect x="-14" y="-12" width="22" height="24" fill="#1B2547"/><circle cx="20" cy="-10" r="3" fill="#FF4D3D"/><circle cx="20" cy="-2" r="3" fill="#FF4D3D"/><circle cx="20" cy="6" r="3" fill="#FF4D3D"/><circle cx="20" cy="14" r="3" fill="#FF4D3D"/>';
+  case 'stepper':return '<circle r="19" fill="url(#steel)" stroke="#1B2547" stroke-width="2"/><rect x="-30" y="-4" width="60" height="8" rx="4" fill="url(#steel)" stroke="#1B2547" stroke-width="1.5"/><circle r="19" fill="url(#steel)" stroke="#1B2547" stroke-width="2"/><circle cx="0" cy="-7" r="4" fill="#FFC531" stroke="#1B2547" stroke-width="1.5"/><path d="M-6 18 C-8 26 -20 26 -30 24" stroke="#3C78F0" stroke-width="2.5" fill="none"/><path d="M-3 18 C-6 28 -20 30 -32 28" stroke="#FF6B57" stroke-width="2.5" fill="none"/>';
+  case 'usb':return '<rect x="-40" y="-5" width="60" height="10" rx="5" fill="#1B2547"/><rect x="18" y="-9" width="22" height="18" rx="2" fill="#c9ced8" stroke="#1B2547" stroke-width="2"/>';
+  }
+  return ''}
+
+/* ============ navigation & progress ============ */
+const STOPS=[
+ {id:'home',t:'الخريطة'},
+ {id:'wire',t:'السلك',d:'هل السلك جهاز؟ وماذا يحدث داخله؟'},
+ {id:'coil',t:'الملف',d:'نلف السلك فيصير مغناطيساً كهربائياً'},
+ {id:'circuit',t:'الدائرة والفولتية',d:'تابع مؤشر الفولتية عبر المقاومة والـLED'},
+ {id:'induction',t:'ملفان متجاوران',d:'ما الذي ينتقل بلا أسلاك؟'},
+ {id:'lab',t:'مختبر العناصر',d:'ابنِ دائرتك وجرّب كل العناصر'},
+ {id:'breadboard',t:'لوحة التجارب',d:'الأسلاك المخفية وتركيب أول دائرة'},
+ {id:'arduino',t:'الأردوينو',d:'العقل الصغير وأول كود'},
+ {id:'stepper',t:'داخل محرك الخطوة',d:'شغّل الملفات بنفسك'},
+ {id:'project',t:'المشروع الأول',d:'وصّل وبرمج وحرّك المحرك'},
+ {id:'challenges',t:'تحديات البرمجة',d:'أكمل الكود وحرّك المحرك بنفسك'},
+ {id:'cert',t:'الشهادة',d:'احتفل بإنجازك!'}];
+let progress=store('sharara-progress')||{};
+function saveProg(){store('sharara-progress',progress);renderNav()}
+const TOTAL=10;
+function starsN(){return Object.keys(progress).filter(k=>progress[k]).length}
+function renderNav(){
+  $('#track').innerHTML=STOPS.map((s,i)=>`<div class="stop ${progress[s.id]?'done':''} ${cur===s.id?'active':''}" data-go="${s.id}"><span class="n">${i?ar(i):'⌂'}</span>${s.t}</div>`).join('');
+  $('#map').innerHTML=STOPS.slice(1).map((s,i)=>`<button class="station ${progress[s.id]?'done':''}" data-go="${s.id}"><span class="sn">${ar(i+1)}</span> ${progress[s.id]?'⭐':''}<h4>${s.t}</h4><p>${s.d}</p></button>`).join('');
+  $('#starCount').textContent=ar(starsN());$('#starTot').textContent=ar(TOTAL);
+  $$('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+}
+let cur='home';
+const MODS={};
+function go(id){if(!STOPS.find(s=>s.id===id))id='home';cur=id;$$('section.view').forEach(v=>v.classList.toggle('show',v.id==='v-'+id));
+  if(location.hash!=='#'+id)history.replaceState(null,'','#'+id);renderNav();window.scrollTo({top:0,behavior:'smooth'});
+  const a=$('.stop.active');if(a)a.scrollIntoView({inline:'center',block:'nearest'});
+  if(MODS[id]&&MODS[id].enter)MODS[id].enter();
+  if(id==='cert')renderCert()}
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+
+/* ============ quizzes ============ */
+const QUIZ={
+ wire:{q:'هل السلك جهاز؟',o:['نعم، لأنه يصنع الكهرباء','لا، هو طريق (موصل) تسير فيه الكهرباء','نعم، لأنه يضيء'],a:1,y:'أحسنت! الجهاز يحوّل الكهرباء إلى شيء آخر (ضوء، حركة، صوت)، أما السلك فهو الطريق فقط.',n:'فكّر مرة أخرى: هل رأيت السلك يصنع ضوءاً أو حركة؟'},
+ coil:{q:'ماذا يحدث عندما تمر الكهرباء في ملف؟',o:['يصبح مغناطيساً كهربائياً','يتجمد','تختفي الكهرباء'],a:0,y:'رائع! ملف + كهرباء = مغناطيس. وكلما زادت اللفات زادت القوة.',n:'ارجع للتجربة وراقب البوصلة ومشابك الورق 😉'},
+ circuit:{q:'عندما يمر مؤشر الفولتية عبر المقاومة، ماذا يحدث له؟',o:['تزيد فولتيته','تنقص فولتيته لأن المقاومة تأخذ جزءاً منها','لا يتغير شيء'],a:1,y:'ممتاز! المقاومة تأخذ جزءاً من الفولتية وتحوّله حرارة، وهذا يحمي الـLED.',n:'راقب الرقم على المؤشر وهو يعبر المقاومة البيج.'},
+ induction:{q:'ما الذي ينتقل من الملف الأول إلى الملف الثاني؟',o:['الإلكترونات تقفز في الهواء','المجال المغناطيسي (يحمل الطاقة)','لا شيء أبداً'],a:1,y:'صحيح! الإلكترونات بقيت في سلكها، والذي انتقل هو المجال المغناطيسي.',n:'تذكّر: لا يوجد سلك بين الملفين. ما الذي رأيناه يمتد بينهما؟'},
+ lab:{q:'لماذا نضع مقاومة مع الـLED؟',o:['لتجعله أجمل','لتقلل التيار وتحميه من الاحتراق','لتزيد الفولتية'],a:1,y:'بالضبط! بدون مقاومة يمر تيار كبير فيحترق الـLED.',n:'جرّب في المختبر: بطارية + LED + أسلاك فقط… ماذا حدث؟'},
+ arduino:{q:'ماذا يفعل الأمر digitalWrite(13, HIGH)؟',o:['يجعل الطرف 13 يعطي 5 فولت','يمسح الكود','يطفئ الأردوينو'],a:0,y:'أحسنت! HIGH تعني 5 فولت (تشغيل)، و LOW تعني 0 فولت (إطفاء).',n:'راقب مقياس الطرف 13 عند تشغيل الكود.'},
+ stepper:{q:'لماذا يتحرك المغناطيس داخل محرك الخطوة؟',o:['لأن الملف المشغّل يصبح مغناطيساً فيجذبه','لأن المحرك يحتوي ماءً','بسبب الهواء'],a:0,y:'رائع! نشغّل الملفات بالترتيب فيتبعها المغناطيس خطوة خطوة.',n:'اضغط على الملفات بنفسك وراقب المغناطيس.'},
+ breadboard:{q:'أي ثقوب في لوحة التجارب متصلة ببعضها من الداخل؟',o:['كل الثقوب متصلة','الثقوب الخمسة في العمود نفسه (في النصف نفسه)','لا يوجد أي ثقب متصل'],a:1,y:'أحسنت! لذلك لا نضع رجلي العنصر في العمود نفسه، وإلا تمر الكهرباء من الشريط وتتجاهل العنصر.',n:'ارجع لوضع الاستكشاف واضغط على أي ثقب.'},
+ project:{q:'لماذا نستخدم لوحة ULN2003 بين الأردوينو والمحرك؟',o:['للزينة','لأن الأردوينو لا يعطي تياراً كافياً للمحرك','لتبريد المحرك'],a:1,y:'ممتاز يا مهندس! اللوحة تأخذ أوامر الأردوينو الصغيرة وتعطي المحرك تياراً أقوى.',n:'اقرأ أعلى المحطة: «مكبّر العضلات» 💪'}};
+function buildQuizzes(){$$('[data-quiz]').forEach(box=>{const id=box.dataset.quiz,Q=QUIZ[id];
+  box.innerHTML=`<div class="q">⭐ سؤال النجمة: ${Q.q}</div><div class="opts">${Q.o.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('')}</div><div class="fb"></div>`;
+  if(progress[id]){box.querySelector(`[data-i="${Q.a}"]`).classList.add('right');box.querySelector('.fb').textContent='⭐ حصلت على هذه النجمة! '+Q.y}
+  box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,fb=box.querySelector('.fb');
+    if(i===Q.a){b.classList.add('right');fb.textContent='⭐ '+Q.y;if(!progress[id]){progress[id]=true;saveProg()}}
+    else{b.classList.add('wrong');fb.textContent='🤔 '+Q.n}})})}
+
+/* ============ animation loop ============ */
+let lastT=performance.now();
+function frame(t){const dt=Math.min(.05,(t-lastT)/1000);lastT=t;const m=MODS[cur];if(m&&m.tick)m.tick(dt,t/1000);requestAnimationFrame(frame)}
+
+/* ================= L1 WIRE ================= */
+MODS.wire=(()=>{const svg=$('#s1');let on=false,heat=0;const els=[];
+  const bg=el('g',{},svg);
+  const leadsOff=el('g',{opacity:.35},bg);
+  el('polyline',{points:'90,87 60,87 60,250 300,250',fill:'none',stroke:'#1B2547','stroke-width':4,'stroke-dasharray':'8 8'},leadsOff);
+  el('polyline',{points:'630,87 660,87 660,250 420,250',fill:'none',stroke:'#1B2547','stroke-width':4,'stroke-dasharray':'8 8'},leadsOff);
+  const leadsOn=el('g',{opacity:0},bg);
+  el('polyline',{points:'90,87 60,87 60,240 322,240',fill:'none',stroke:'url(#cu)','stroke-width':10,'stroke-linejoin':'round'},leadsOn);
+  el('polyline',{points:'630,87 660,87 660,240 400,240',fill:'none',stroke:'url(#cu)','stroke-width':10,'stroke-linejoin':'round'},leadsOn);
+  const bat=el('g',{},bg);battery(bat,360,240,false);
+  const bl=el('text',{x:360,y:288,'text-anchor':'middle','font-size':16,'font-weight':700,fill:'#525C80'},bg);bl.textContent='البطارية (مضخة الإلكترونات)';
+  el('rect',{x:90,y:66,width:540,height:42,rx:21,fill:'url(#cu)',stroke:'#1B2547','stroke-width':3},svg);
+  const hot=el('rect',{x:90,y:66,width:540,height:42,rx:21,fill:'#FF3B1F',opacity:0},svg);
+  el('rect',{x:102,y:75,width:516,height:24,rx:12,fill:'#FFF1E0',opacity:.6},svg);
+  const t1=el('text',{x:360,y:46,'text-anchor':'middle','font-size':18,'font-weight':800,fill:'#1B2547'},svg);t1.textContent='سلك نحاسي (مكبَّر جداً 🔍)';
+  const hotT=el('text',{x:360,y:140,'text-anchor':'middle','font-size':20,'font-weight':800,fill:'#FF3B1F',opacity:0},svg);hotT.textContent='🔥 السلك يسخن! (قِصَر)';
+  const arrow=el('text',{x:360,y:182,'text-anchor':'middle','font-size':16,'font-weight':700,fill:'#14A89A',opacity:0},svg);arrow.textContent='اتجاه سير الإلكترونات ← من (−) إلى (+)';
+  const P=makePath([[322,240],[60,240],[60,87],[660,87],[660,240],[398,240]]);const topS=262+153;
+  const eg=el('g',{},svg);
+  for(let i=0;i<64;i++){const inTube=i<36;const c=el('circle',{r:5,fill:'#FFC531',stroke:'#1B2547','stroke-width':1.6},eg);
+    els.push({c,inTube,x:110+Math.random()*500,y:80+Math.random()*14,vx:0,vy:0,s:inTube?0:Math.random()*P.L})}
+  function setOn(v){on=v;$('#l1bat').textContent=on?'✂️ افصل البطارية':'🔋 صِل البطارية';$('#l1bat').classList.toggle('on',on);
+    leadsOn.setAttribute('opacity',on?1:0);leadsOff.setAttribute('opacity',on?0:.35);bat.setAttribute('transform',on?'':'translate(0,10)');arrow.setAttribute('opacity',on?1:0);
+    els.forEach(e=>{if(on){if(e.inTube)e.s=topS+(e.x-60)}else{if(e.inTube){const p=P.at(e.s);if(p[1]<95&&p[0]>100&&p[0]<620)e.x=p[0];else e.x=110+Math.random()*500;e.y=80+Math.random()*14}}})}
+  $('#l1bat').onclick=()=>setOn(!on);
+  setOn(false);
+  return{tick(dt){
+    heat=clamp(heat+(on?dt/7:-dt/3),0,1);hot.setAttribute('opacity',heat*.55);hotT.setAttribute('opacity',heat>.45?1:0);
+    for(const e of els){
+      if(on){e.s+=dt*70;const p=P.at(e.s);e.c.setAttribute('cx',p[0]+(Math.random()-.5)*2);e.c.setAttribute('cy',p[1]+(Math.random()-.5)*2);e.c.setAttribute('opacity',1)}
+      else if(e.inTube){e.vx+=(Math.random()-.5)*900*dt;e.vy+=(Math.random()-.5)*900*dt;e.vx*=.9;e.vy*=.9;e.x+=e.vx*dt;e.y+=e.vy*dt;
+        if(e.x<106||e.x>614){e.vx*=-1;e.x=clamp(e.x,106,614)}if(e.y<79||e.y>95){e.vy*=-1;e.y=clamp(e.y,79,95)}
+        e.c.setAttribute('cx',e.x);e.c.setAttribute('cy',e.y);e.c.setAttribute('opacity',1)}
+      else e.c.setAttribute('opacity',0)}
+    if(!on)say('b1','انظر! الإلكترونات داخل السلك <b>تهتز في مكانها بلا اتجاه</b>. السلك وحده لا يفعل شيئاً… هو مجرد <b>طريق</b> ينتظر من يدفع الإلكترونات. 👀');
+    else if(heat<.45)say('b1','الآن البطارية <b>تدفع الإلكترونات فتسير كلها في اتجاه واحد</b> ⚡ هذا هو <b>التيار الكهربائي</b>! لكن لاحظ: السلك لم يصنع ضوءاً ولا حركة. إذن <b>السلك ليس جهازاً</b>، بل موصل.','good');
+    else say('b1','🔥 انتبه! لا يوجد شيء يستهلك الكهرباء، فالتيار كبير جداً و<b>السلك يسخن</b>. هذا اسمه <b>قِصَر</b> وهو خطير. افصل البطارية!','warn');
+  }}})();
+
+/* ================= L2 COIL ================= */
+MODS.coil=(()=>{const svg=$('#s2');let n=0,on=false,core=false,str=0,needle=0;
+  const field=el('g',{},svg);const fl=[];
+  for(let k=0;k<3;k++){fl.push(el('ellipse',{cx:360,cy:130,rx:170+k*48,ry:72+k*32,fill:'none',stroke:'#14A89A','stroke-width':3,class:'flow',opacity:0},field))}
+  const leads=el('g',{},svg);
+  el('polyline',{points:'230,82 230,32 322,32',fill:'none',stroke:'url(#cu)','stroke-width':8,'stroke-linejoin':'round'},leads);
+  el('polyline',{points:'490,82 490,32 398,32',fill:'none',stroke:'url(#cu)','stroke-width':8,'stroke-linejoin':'round'},leads);
+  const batG=el('g',{},svg);battery(batG,360,32,false);
+  const coilG=el('g',{},svg);
+  const clips=[];const cg=el('g',{},svg);
+  for(let i=0;i<5;i++){const g=el('g',{},cg);el('rect',{x:-14,y:-5,width:28,height:10,rx:5,fill:'none',stroke:'#7d8596','stroke-width':3},g);el('rect',{x:-9,y:-2,width:18,height:4,rx:2,fill:'none',stroke:'#7d8596','stroke-width':2},g);
+    const home=[70+(i%3)*42,230+Math.floor(i/3)*34+(i%2)*6];clips.push({g,home,pos:[...home],rot:(i*37)%60-30})}
+  const lab=el('text',{x:110,y:300,'text-anchor':'middle','font-size':15,'font-weight':700,fill:'#525C80'},svg);lab.textContent='مشابك ورق حديدية';
+  const comp=el('g',{transform:'translate(640,130)'},svg);
+  el('circle',{r:40,fill:'#fff',stroke:'#1B2547','stroke-width':3},comp);
+  const cn=el('text',{y:-25,'text-anchor':'middle','font-size':12,'font-weight':800},comp);cn.textContent='ش';
+  const ndl=el('g',{},comp);el('path',{d:'M0 -30 L7 0 L-7 0Z',fill:'#FF6B57'},ndl);el('path',{d:'M0 30 L7 0 L-7 0Z',fill:'#8a91a3'},ndl);el('circle',{r:4,fill:'#1B2547'},comp);
+  const ct=el('text',{x:640,y:196,'text-anchor':'middle','font-size':15,'font-weight':700,fill:'#525C80'},svg);ct.textContent='بوصلة';
+  const dots=el('g',{},svg);const dl=[];
+  function drawCoil(){coilG.innerHTML='';dots.innerHTML='';dl.length=0;
+    if(core){el('rect',{x:205,y:114,width:310,height:32,rx:6,fill:'#9AA1B5',stroke:'#1B2547','stroke-width':2.5},coilG);el('path',{d:'M515 114 L540 130 L515 146Z',fill:'#9AA1B5',stroke:'#1B2547','stroke-width':2.5},coilG)}
+    if(n===0){el('line',{x1:230,y1:82,x2:490,y2:82,stroke:'url(#cu)','stroke-width':8,'stroke-linecap':'round'},coilG);return}
+    const p=coilPaths(230,490,130,48,n);
+    p.back.forEach(d=>el('path',{d,fill:'none',stroke:'#8E4518','stroke-width':7,'stroke-linecap':'round',opacity:.75},coilG));
+    if(core){}
+    p.front.forEach(d=>el('path',{d,fill:'none',stroke:'url(#cu)','stroke-width':8,'stroke-linecap':'round'},coilG));
+    p.front.forEach(d=>{el('path',{d,fill:'none',stroke:'#1B2547','stroke-width':1.2,opacity:.5},coilG)});
+  }
+  function upd(){n=+$('#l2turns').value;$('#l2tv').textContent=n;drawCoil();
+    $('#l2bat').textContent=on?'✂️ افصل البطارية':'🔋 صِل البطارية';$('#l2bat').classList.toggle('on',on);$('#l2core').classList.toggle('on',core);$('#l2core').textContent=core?'🔩 أخرج المسمار':'🔩 أدخل مسماراً حديدياً'}
+  $('#l2turns').oninput=upd;$('#l2bat').onclick=()=>{on=!on;upd()};$('#l2core').onclick=()=>{core=!core;upd()};upd();
+  return{tick(dt,t){
+    const target=on?(n/12)*(core?2.2:1)*(n>0?1:0.06):0;str=lerp(str,target,1-Math.exp(-dt*5));
+    fl.forEach((e,k)=>e.setAttribute('opacity',clamp(str*1.2-k*.25,0,1)));
+    needle=lerp(needle,-95*clamp(str*1.6,0,1),1-Math.exp(-dt*4));ndl.setAttribute('transform',`rotate(${needle+Math.sin(t*9)*str*2})`);
+    const pull=Math.floor(clamp(str,0,1.7)*3.2);
+    clips.forEach((c,i)=>{const tgt=i<pull?[196-(i%2)*8,100+i*14]:c.home;c.pos[0]=lerp(c.pos[0],tgt[0],1-Math.exp(-dt*(i<pull?7:4)));c.pos[1]=lerp(c.pos[1],tgt[1],1-Math.exp(-dt*(i<pull?7:4)));
+      c.g.setAttribute('transform',`translate(${c.pos[0]},${c.pos[1]}) rotate(${i<pull?90:c.rot})`)});
+    if(n===0&&!on)say('b2','هذا <b>سلك مستقيم</b>. حرّك مؤشر «عدد اللفات» لنلفّه حول نفسه ونصنع <b>ملفاً</b> 🌀');
+    else if(n===0&&on)say('b2','السلك المستقيم يصنع مجالاً مغناطيسياً ضعيفاً جداً لا نكاد نراه. <b>لفّه</b> لتجمع قوته في مكان واحد!');
+    else if(!on)say('b2',`صنعنا ملفاً من ${ar(n)} لفات! لكن <b>بدون كهرباء</b> لا يحدث شيء. صِل البطارية 🔋`);
+    else if(!core)say('b2',`🧲 صار الملف <b>مغناطيساً كهربائياً</b>! البوصلة تلتفت نحوه، والمشابك تنجذب. ${n<8?'زِد اللفات لتزيد القوة.':'جرّب إدخال مسمار حديدي!'}`,'good');
+    else say('b2','🔩 المسمار الحديدي <b>يجمع المجال المغناطيسي ويقوّيه كثيراً</b>. افصل البطارية… سيختفي المغناطيس فوراً! هذا ما يجعله مفيداً: نشغّله ونطفئه متى نشاء.','good');
+  }}})();
+
+/* ================= L3 CIRCUIT + VOLTAGE MARKER ================= */
+MODS.circuit=(()=>{const svg=$('#s3'),gs=$('#s3g');const RV=[10,47,100,150,220,330,470,1000,2200];
+  let V=4.5,R=220,led='red',conn=false,burnt=false,I=0,Vf=2,ms=0,lit=0;
+  const VF={red:2.0,green:2.2,blue:3.0},COL={red:'#FF4D3D',green:'#2BD46B',blue:'#3C78F0'};
+  const pts=[[110,200],[110,70],[620,70],[620,330],[110,330],[110,280],[110,200]];const P=makePath(pts);const L=P.L;// 1540
+  const RZ=[420,540],LZ=[740,800],BZ=[1460,1540];
+  function vAt(s){if(!conn)return 0;const vr=I*R;
+    if(s<RZ[0])return V; if(s<RZ[1])return V-vr*(s-RZ[0])/(RZ[1]-RZ[0]);
+    if(s<LZ[0])return V-vr; if(s<LZ[1])return (V-vr)*(1-(s-LZ[0])/(LZ[1]-LZ[0]));
+    if(s<BZ[0])return 0; return V*(s-BZ[0])/(BZ[1]-BZ[0])}
+  const wires=el('g',{},svg);const pieces=[];
+  for(let s=0;s<L;s+=10){const a=P.at(s),b=P.at(Math.min(L,s+10.5));if(s>=BZ[0])continue;pieces.push({s:s+5,e:el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'#c4c9da','stroke-width':9,'stroke-linecap':'round'},wires)})}
+  // components
+  const resG=el('g',{transform:'translate(480,70)'},svg);
+  const ledG=el('g',{transform:'translate(620,270) rotate(90)'},svg);
+  const batG=el('g',{},svg);
+  const lbl=(x,y,t,c='#1B2547')=>{const e=el('text',{x,y,'text-anchor':'middle','font-size':16,'font-weight':800,fill:c},svg);e.textContent=t;return e};
+  lbl(480,42,'المقاومة');const lr=lbl(480,108,'220Ω','#525C80');lr.setAttribute('class','mono');
+  lbl(672,276,'LED');
+  lbl(365,360,'سلك العودة (0 فولت)','#525C80');lbl(250,56,'سلك (فولتية كاملة)','#525C80');
+  const smoke=el('text',{x:650,y:236,'font-size':30,opacity:0},svg);smoke.textContent='💨';
+  // current dots
+  const dg=el('g',{},svg);const dots=[];for(let i=0;i<22;i++)dots.push({s:i*L/22,c:el('circle',{r:4,fill:'#fff',stroke:'#1B2547','stroke-width':1.5},dg)});
+  // marker
+  const mk=el('g',{},svg);el('circle',{r:22,fill:'#FFC531',opacity:.35,filter:'url(#soft)'},mk);const mc=el('circle',{r:13,fill:'#FFC531',stroke:'#1B2547','stroke-width':3},mk);
+  const badge=el('g',{transform:'translate(0,-34)'},mk);el('rect',{x:-34,y:-15,width:68,height:26,rx:13,fill:'#1B2547'},badge);const bt=el('text',{y:4,'text-anchor':'middle','font-size':15,'font-weight':700,fill:'#fff',class:'mono'},badge);bt.textContent='0V';
+  // voltage graph
+  const gl=el('polyline',{fill:'none',stroke:'#FF6B57','stroke-width':3.5,'stroke-linejoin':'round'},gs);
+  el('line',{x1:20,y1:92,x2:700,y2:92,stroke:'#1B2547','stroke-width':2},gs);
+  const zones=[[0,RZ[0],'سلك'],[RZ[0],RZ[1],'مقاومة'],[RZ[1],LZ[0],'سلك'],[LZ[0],LZ[1],'LED'],[LZ[1],BZ[0],'سلك العودة'],[BZ[0],L,'بطارية']];
+  zones.forEach(([a,b,t],i)=>{const x0=20+a/L*680,x1=20+b/L*680;if(i%2)el('rect',{x:x0,y:14,width:x1-x0,height:78,fill:i===5?'#FFF1C2':'#F1EDE4'},gs);const e=el('text',{x:(x0+x1)/2,y:110,'text-anchor':'middle','font-size':13,'font-weight':700,fill:'#525C80'},gs);e.textContent=t});
+  gs.appendChild(gl);
+  const gT=el('text',{x:700,y:12,'text-anchor':'end','font-size':13,'font-weight':800,fill:'#1B2547'},gs);gT.textContent='📈 خريطة الفولتية على طول الدائرة';
+  const gm=el('line',{y1:14,y2:92,stroke:'#1B2547','stroke-width':2,'stroke-dasharray':'4 3'},gs);const gd=el('circle',{r:6,fill:'#FFC531',stroke:'#1B2547','stroke-width':2},gs);
+  function draw(){batG.innerHTML='';
+    if(conn){battery(batG,110,240,true)}else{battery(batG,60,240,true);el('line',{x1:110,y1:200,x2:110,y2:214,stroke:'#c4c9da','stroke-width':9},batG);}
+    resG.innerHTML=partSVG('res');lr.textContent=R+'Ω';
+    const t={red:'ledR',green:'ledG',blue:'ledB'}[led];ledG.innerHTML=partSVG(t,{glow:lit,burnt});
+    pieces.forEach(p=>p.e.setAttribute('stroke',conn?voltColor(vAt(p.s)/V):'#c4c9da'));
+    const ptsG=[];for(let s=0;s<=L;s+=10){ptsG.push((20+s/L*680).toFixed(1)+','+(92-vAt(s)/9*74).toFixed(1))}gl.setAttribute('points',ptsG.join(' '));
+    $('#r3i').textContent=(I*1000).toFixed(1)+' mA';$('#r3vr').textContent=(I*R).toFixed(2)+' V';$('#r3vl').textContent=(conn&&!burnt?(V-I*R):0).toFixed(2)+' V';
+    $('#l3bat').textContent=conn?'✂️ افصل البطارية':'🔋 اربط البطارية';$('#l3bat').classList.toggle('on',conn)}
+  function calc(){V=+$('#l3v').value;R=RV[+$('#l3r').value];led=$('#l3c').value;Vf=VF[led];$('#l3rv').textContent=R+'Ω';
+    if(!conn||burnt)I=0;else I=V>Vf?(V-Vf)/R:0;
+    if(conn&&I>0.035){burnt=true;I=0;smoke.setAttribute('opacity',1)}
+    lit=clamp(I/0.02,0,1);draw()}
+  $('#l3bat').onclick=()=>{conn=!conn;ms=0;calc()};['#l3v','#l3r','#l3c'].forEach(s=>$(s).oninput=calc);
+  $('#l3reset').onclick=()=>{burnt=false;smoke.setAttribute('opacity',0);calc()};
+  calc();
+  return{tick(dt,t){
+    if(conn)ms=(ms+dt*85)%L;const p=P.at(ms);mk.setAttribute('transform',`translate(${p[0]},${p[1]})`);
+    const v=vAt(ms);bt.textContent=v.toFixed(1)+'V';mc.setAttribute('fill',conn?voltColor(v/V):'#c4c9da');$('#r3m').textContent=v.toFixed(2)+' V';
+    const gx=20+ms/L*680;gm.setAttribute('x1',gx);gm.setAttribute('x2',gx);gd.setAttribute('cx',gx);gd.setAttribute('cy',92-v/9*74);
+    const sp=Math.min(260,I*6000);dots.forEach(d=>{d.s=(d.s+sp*dt)%L;const q=P.at(d.s);d.c.setAttribute('cx',q[0]);d.c.setAttribute('cy',q[1]);d.c.setAttribute('opacity',conn&&I>0?1:.25)});
+    if(burnt)smoke.setAttribute('transform',`translate(${Math.sin(t*2)*4},${-((t*20)%20)})`);
+    // guide talk
+    if(!conn)return say('b3','البطارية <b>غير مربوطة</b>، فلا توجد فولتية في الدائرة (كل الأسلاك رمادية = 0 فولت). اضغط <b>«اربط البطارية»</b> وتابع المؤشر الأصفر! 🟡');
+    if(burnt)return say('b3',`💥 <b>احترق الـLED!</b> المقاومة (${R}Ω) صغيرة جداً على بطارية ${V} فولت، فمرّ تيار كبير. اختر مقاومة أكبر ثم اضغط «LED جديد».`,'warn');
+    if(I===0&&V<=Vf&&ms>LZ[0]-200&&ms<LZ[1])return say('b3',`⛔ وصل المؤشر للـLED ومعه ${V} فولت فقط، لكن الـLED ${led==='blue'?'الأزرق':''} يحتاج نحو <b>${Vf} فولت</b> ليضيء! الفولتية لا تكفي لعبوره، لذلك لا يوجد تيار. جرّب بطارية أكبر.`,'warn');
+    if(ms<RZ[0]||ms>=BZ[0]&&false)return say('b3',`أنا المؤشر 🟡 خرجت من القطب الموجب ومعي <b>${V} فولت كاملة</b>. على السلك لا أفقد شيئاً تقريباً.`);
+    if(ms<RZ[1])return say('b3',`🔥 أعبر <b>المقاومة</b> الآن! إنها تأخذ مني <b>${(I*R).toFixed(1)} فولت</b> وتحوّلها إلى حرارة صغيرة. هكذا تحمي الـLED من التيار الكبير.`);
+    if(ms<LZ[0])return say('b3',`بقي معي <b>${(V-I*R).toFixed(1)} فولت</b> بعد المقاومة… أنا في الطريق إلى الـLED 💡`);
+    if(ms<LZ[1])return say('b3',`💡 أعبر <b>الـLED</b>: يأخذ آخر ما معي (${(V-I*R).toFixed(1)} فولت) ويحوّله إلى <b>ضوء</b>! التيار الآن ${(I*1000).toFixed(1)} ملي أمبير.`,'good');
+    if(ms<BZ[0])return say('b3','🔵 أعود في <b>سلك العودة</b> وقد صرفت كل فولتيتي (0 فولت). سأدخل البطارية لأشحن من جديد…');
+    return say('b3',`⬆️ <b>البطارية ترفعني من 0 إلى ${V} فولت</b> مثل مضخة ترفع الماء إلى الأعلى. وتبدأ الدورة من جديد!`,'good');
+  }}})();
+
+/* ================= L4 INDUCTION ================= */
+MODS.induction=(()=>{const svg=$('#s4');let d=.15,ac=false,sw=false,A=0,prevA=0,emf=0,glow=0,needle=0,t0=0;
+  const fieldG=el('g',{},svg);const lines=[];
+  for(let k=0;k<4;k++)lines.push(el('ellipse',{cx:180,cy:140,rx:110+k*70,ry:52+k*26,fill:'none',stroke:'#14A89A','stroke-width':3,class:'flow',opacity:0},fieldG));
+  // coil A
+  const cA=el('g',{},svg);const pa=coilPaths(110,250,140,46,7);
+  pa.back.forEach(dd=>el('path',{d:dd,fill:'none',stroke:'#8E4518','stroke-width':6,opacity:.75},cA));pa.front.forEach(dd=>el('path',{d:dd,fill:'none',stroke:'url(#cu)','stroke-width':7,'stroke-linecap':'round'},cA));
+  el('polyline',{points:'110,94 80,94 80,280 130,280',fill:'none',stroke:'#1B2547','stroke-width':4},svg);
+  el('polyline',{points:'250,94 270,94 270,280 236,280',fill:'none',stroke:'#1B2547','stroke-width':4},svg);
+  const bA=el('g',{},svg);battery(bA,180,300,false);
+  const swG=el('g',{transform:'translate(180,250)',style:'cursor:pointer'},svg);
+  el('polyline',{points:'130,280 130,250 150,250',fill:'none',stroke:'#1B2547','stroke-width':4},svg);el('polyline',{points:'236,280 236,250 210,250',fill:'none',stroke:'#1B2547','stroke-width':4},svg);
+  const tA=el('text',{x:180,y:30,'text-anchor':'middle','font-size':17,'font-weight':800},svg);tA.textContent='الملف الأول (مع البطارية)';
+  // coil B (movable)
+  const cB=el('g',{},svg);const pb=coilPaths(0,140,140,46,7);
+  pb.back.forEach(dd=>el('path',{d:dd,fill:'none',stroke:'#8E4518','stroke-width':6,opacity:.75},cB));pb.front.forEach(dd=>el('path',{d:dd,fill:'none',stroke:'url(#cu)','stroke-width':7,'stroke-linecap':'round'},cB));
+  el('polyline',{points:'0,94 -14,94 -14,250 40,250',fill:'none',stroke:'#1B2547','stroke-width':4},cB);el('polyline',{points:'140,94 154,94 154,250 100,250',fill:'none',stroke:'#1B2547','stroke-width':4},cB);
+  const bulb=el('g',{transform:'translate(70,250)'},cB);
+  const tB=el('text',{x:70,y:-110,'text-anchor':'middle','font-size':17,'font-weight':800},cB);tB.setAttribute('y',30-0);tB.textContent='الملف الثاني (مع مصباح)';
+  // galvanometer
+  const gal=el('g',{transform:'translate(70,316)'},cB);el('path',{d:'M-34 0 A34 34 0 0 1 34 0Z',fill:'#fff',stroke:'#1B2547','stroke-width':2.5},gal);
+  [-60,-30,0,30,60].forEach(a=>{const r=a*Math.PI/180;el('line',{x1:Math.sin(r)*26,y1:-Math.cos(r)*26,x2:Math.sin(r)*32,y2:-Math.cos(r)*32,stroke:'#1B2547','stroke-width':2},gal)});
+  const gn=el('line',{x1:0,y1:0,x2:0,y2:-28,stroke:'#FF6B57','stroke-width':3.5,'stroke-linecap':'round'},gal);
+  const qm=el('text',{x:0,y:0,'text-anchor':'middle','font-size':30,opacity:0},svg);
+  const eg=el('g',{},cB);const ed=[];const PB=makePath([[0,94],[-14,94],[-14,250],[154,250],[154,94],[140,94]]);for(let i=0;i<12;i++)ed.push({s:i*PB.L/12,c:el('circle',{r:3.5,fill:'#FFC531',stroke:'#1B2547','stroke-width':1.2},eg)});
+  function drawSw(){swG.innerHTML=partSVG('switch',{on:ac||sw});$('#l4sw').textContent=sw?'افتح المفتاح':'أغلق المفتاح';$('#l4sw').classList.toggle('on',sw);$('#l4sw').disabled=ac;
+    $('#l4dc').classList.toggle('on',!ac);$('#l4ac').classList.toggle('on',ac)}
+  swG.onclick=()=>{if(!ac){sw=!sw;drawSw()}};
+  $('#l4sw').onclick=()=>{sw=!sw;drawSw()};$('#l4dc').onclick=()=>{ac=false;drawSw()};$('#l4ac').onclick=()=>{ac=true;drawSw()};
+  $('#l4d').oninput=()=>d=$('#l4d').value/100;drawSw();
+  let lastKick=0;
+  return{tick(dt,t){
+    const bx=300+d*260;cB.setAttribute('transform',`translate(${bx},0)`);
+    prevA=A; if(ac)A=Math.sin(t*2*Math.PI*0.8); else A=lerp(A,sw?1:0,1-Math.exp(-dt*7));
+    const dA=(A-prevA)/Math.max(dt,1e-3);const c=Math.pow(1-d,2.2);
+    emf=lerp(emf,c*dA/(ac?5:4),.5);
+    lines.forEach((e,k)=>{e.setAttribute('opacity',clamp(Math.abs(A)*(1-k*.18),0,1));e.style.animationDirection=A<0?'reverse':'normal'});
+    needle=lerp(needle,clamp(emf*55,-70,70),1-Math.exp(-dt*10));gn.setAttribute('transform',`rotate(${needle})`);
+    glow=lerp(glow,clamp(Math.abs(emf)*1.4,0,1),1-Math.exp(-dt*(ac?4:12)));bulb.innerHTML=partSVG('lamp',{glow});
+    ed.forEach(e=>{e.s=(e.s+emf*160*dt+PB.L)%PB.L;const q=PB.at(e.s);e.c.setAttribute('cx',q[0]);e.c.setAttribute('cy',q[1])});
+    if(Math.abs(emf)>.12)lastKick=t;
+    if(ac&&d<.6)say('b4','∿ <b>التيار المتناوب</b> يغيّر المجال المغناطيسي باستمرار (لاحظ الخطوط تتبدل)، لذلك يبقى <b>المصباح مضيئاً</b> دون أي سلك بين الملفين! هذا سر <b>المحوّل</b> و<b>الشاحن اللاسلكي</b>. 🔌📱','good');
+    else if(d>=.6)say('b4','الملف الثاني <b>بعيد جداً</b>… المجال المغناطيسي يضعف كلما ابتعدنا، فلا يصل إليه ما يكفي. قرّبه! 🔍','warn');
+    else if(t-lastKick<.6)say('b4','⚡ رأيت ذلك؟ المؤشر قفز والمصباح ومض! عندما <b>تغيّر</b> المجال (لحظة فتح أو إغلاق المفتاح) انتقلت الطاقة للملف الثاني. <b>الإلكترونات لم تقفز</b>؛ الذي انتقل هو <b>المجال المغناطيسي</b>.','good');
+    else if(sw)say('b4','🤔 المفتاح ما زال مغلقاً والمجال موجود… لكن <b>المؤشر عاد للصفر!</b> لأن المجال <b>ثابت لا يتغير</b>. الكهرباء تنتقل للملف الثاني فقط عندما يتغيّر المجال. افتح المفتاح وراقب!');
+    else say('b4','الملفان منفصلان تماماً، لا يوجد سلك بينهما. <b>أغلق المفتاح</b> وراقب المؤشر في الملف الثاني جيداً 👀');
+  }}})();
+
+/* ================= L5 LAB ================= */
+MODS.lab=(()=>{const svg=$('#s5');
+  const PARTS={wire:{n:'سلك',R:0,Vf:0},r100:{n:'مقاومة 100Ω',R:100,Vf:0},r1k:{n:'مقاومة 1kΩ',R:1000,Vf:0},ledR:{n:'LED أحمر',R:8,Vf:2,led:1},ledB:{n:'LED أزرق',R:8,Vf:3,led:1},
+    diode:{n:'ثنائي',R:0.5,Vf:.7},lamp:{n:'مصباح',R:15,Vf:0,load:1},motor:{n:'محرك',R:8,Vf:0,load:1},buzzer:{n:'جرس',R:90,Vf:0,load:1},switch:{n:'مفتاح',R:0,Vf:0}};
+  const LOAD=k=>k!=='wire'&&k!=='switch';
+  const SL=[{x:270,y:70,v:0},{x:460,y:70,v:0},{x:610,y:200,v:1},{x:360,y:330,v:0}];
+  let slots=[null,null,null,null],nb=2,sel=null,I=0,state='open',motorA=0;
+  $('#tray').innerHTML=Object.entries(PARTS).map(([k,p])=>`<button class="part" data-p="${k}"><svg viewBox="-46 -26 92 52">${partSVG(k,{on:true,glow:k==='lamp'?0:0})}</svg>${p.n}</button>`).join('');
+  $$('#tray .part').forEach(b=>b.onclick=()=>{sel=sel===b.dataset.p?null:b.dataset.p;$$('#tray .part').forEach(x=>x.classList.toggle('sel',x.dataset.p===sel))});
+  const P=makePath([[110,160],[110,70],[610,70],[610,330],[110,330],[110,240],[110,160]]);
+  el('polyline',{points:'110,160 110,70 610,70 610,330 110,330 110,240',fill:'none',stroke:'#D2783A','stroke-width':6,'stroke-linejoin':'round'},svg);
+  const batG=el('g',{},svg);const vT=el('text',{x:60,y:205,'text-anchor':'middle','font-size':16,'font-weight':800,class:'mono'},svg);
+  const dg=el('g',{},svg);const dots=[];for(let i=0;i<30;i++)dots.push({s:i*P.L/30,c:el('circle',{r:4,fill:'#FFC531',stroke:'#1B2547','stroke-width':1.2},dg)});
+  const slotG=el('g',{},svg);
+  const shortT=el('text',{x:360,y:205,'text-anchor':'middle','font-size':24,'font-weight':800,fill:'#FF3B1F',opacity:0},svg);shortT.textContent='🔥 قِصَر! البطارية تسخن';
+  function drawBat(){batG.innerHTML='';const h=80;el('rect',{x:110-24,y:200-h/2,width:48,height:h,fill:'#FFFDF8'},batG);
+    for(let i=0;i<nb;i++){const g=el('g',{transform:`translate(110,${200+ (i-(nb-1)/2)*(70/nb)*1.15}) rotate(-90) scale(${Math.min(1,1.6/nb)})`},batG);g.innerHTML=partSVG('battery')}
+    vT.textContent=(nb*1.5).toFixed(1)+'V';$('#l5v').textContent=(nb*1.5).toFixed(1)+'V';$('#r5v').textContent=(nb*1.5).toFixed(1)+' V';
+    $$('[data-nb]').forEach(b=>b.classList.toggle('on',+b.dataset.nb===nb))}
+  function solve(){const V=nb*1.5;I=0;let msg='',mood='';
+    const empty=slots.findIndex(s=>!s);
+    if(empty>=0){state='open';msg=`🔌 <b>الدائرة مفتوحة!</b> الخانة رقم ${ar(empty+1)} فارغة، فالطريق مقطوع ولا يمكن للتيار أن يسير. ضع فيها سلكاً أو عنصراً.`}
+    else if(slots.some(s=>s.t==='switch'&&!s.on)){state='open';msg='⛔ <b>المفتاح مفتوح</b> فالطريق مقطوع. اضغط على المفتاح في الدائرة لإغلاقه.'}
+    else if(slots.some(s=>s.burnt)){state='open';msg='💥 يوجد <b>LED محترق</b> — صار مثل سلك مقطوع. اضغط عليه لإزالته وضع واحداً جديداً <b>مع مقاومة</b>.';mood='warn'}
+    else if(!slots.some(s=>LOAD(s.t))){state='short';I=V/(0.6*nb);msg='⚠️ <b>قِصَر!</b> لا يوجد أي عنصر يستهلك الكهرباء، فالتيار ضخم والبطارية تسخن وقد تتلف. أضف مصباحاً أو مقاومة أو أي عنصر.';mood='warn'}
+    else{const sVf=slots.reduce((a,s)=>a+PARTS[s.t].Vf,0),sR=slots.reduce((a,s)=>a+PARTS[s.t].R,0)+0.6*nb;
+      if(V<=sVf){state='weak';msg=`🔋 <b>الفولتية لا تكفي!</b> العناصر تحتاج ${sVf.toFixed(1)} فولت على الأقل لتعبرها، ومعك ${V} فقط. ${slots.some(s=>s.t==='ledB')?'الـLED الأزرق يحتاج نحو ٣ فولت. ':''}أضف بطارية.`;mood='warn'}
+      else{I=(V-sVf)/sR;state='closed';
+        if(slots.some(s=>PARTS[s.t].led)&&I>0.04){slots.forEach(s=>{if(PARTS[s.t].led)s.burnt=true});state='open';const ii=I;I=0;msg=`💥 <b>احترق الـLED!</b> مرّ تيار ${(ii*1000).toFixed(0)} ملي أمبير والـLED يتحمل نحو ٢٠ فقط. <b>المقاومة</b> هي حارسه الشخصي — ضعها معه.`;mood='warn'}
+        else{const parts=[];
+          if(slots.some(s=>PARTS[s.t].led))parts.push('💡 الـLED يضيء');
+          if(slots.some(s=>s.t==='lamp'))parts.push(I>0.06?'💡 المصباح يضيء':'المصباح خافت جداً (يحتاج تياراً أكبر)');
+          if(slots.some(s=>s.t==='motor'))parts.push(I>0.1?'⚙️ المحرك يدور':'⚙️ المحرك لا يكفيه التيار ليدور');
+          if(slots.some(s=>s.t==='buzzer'))parts.push(I>0.01?'🔔 الجرس يرن':'🔔 الجرس صامت');
+          msg=`✅ <b>الدائرة مغلقة!</b> التيار ${(I*1000).toFixed(1)} ملي أمبير. ${parts.join(' · ')}`;mood='good'}}}
+    $('#r5i').textContent=state==='short'?'خطر!':(I*1000).toFixed(1)+' mA';
+    $('#r5s').textContent={open:'مفتوحة',closed:'مغلقة ✅',short:'قِصَر ⚠️',weak:'جهد ضعيف'}[state];
+    say('b5',msg,mood);shortT.setAttribute('opacity',state==='short'?1:0);drawSlots()}
+  function drawSlots(){slotG.innerHTML='';
+    SL.forEach((p,i)=>{const s=slots[i];const g=el('g',{class:'slot',transform:`translate(${p.x},${p.y}) rotate(${p.v?90:0})`},slotG);
+      el('rect',{class:'slotbox',x:-48,y:-30,width:96,height:60,rx:12,fill:s?'#FFFDF8':'#fff',stroke:'#1B2547','stroke-width':s?1.2:2.5,'stroke-dasharray':s?'3 4':'7 6'},g);
+      if(!s){const t=el('text',{x:0,y:8,'text-anchor':'middle','font-size':24,'font-weight':800,fill:'#FF6B57',transform:p.v?'rotate(-90)':''},g);t.textContent='+'+ar(i+1)}
+      else{const inner=el('g',{},g);const pr=PARTS[s.t];
+        inner.innerHTML=partSVG(s.t,{on:s.on,burnt:s.burnt,glow:state==='closed'?(pr.led?clamp(I/0.02,0,1):s.t==='lamp'?clamp((I-0.03)/0.15,0,1):0):0});
+        if(state==='closed'){const vd=I*pr.R+pr.Vf;if(vd>0.05){const t=el('text',{x:0,y:-36,'text-anchor':'middle','font-size':13,'font-weight':700,fill:'#525C80',class:'mono',transform:p.v?'rotate(-90) translate(-58,40)':''},g);t.textContent=vd.toFixed(2)+'V'}}}
+      g.onclick=()=>{if(sel){slots[i]={t:sel,on:sel==='switch'?false:true,burnt:false}}else if(s&&s.t==='switch'){s.on=!s.on}else slots[i]=null;solve()}})}
+  $$('[data-nb]').forEach(b=>b.onclick=()=>{nb=+b.dataset.nb;drawBat();solve()});
+  $('#l5clear').onclick=()=>{slots=[null,null,null,null];solve()};
+  $('#l5ex').onclick=()=>{slots=[{t:'switch',on:true},{t:'r100'},{t:'ledR'},{t:'wire'}];nb=2;drawBat();solve()};
+  drawBat();solve();
+  // encyclopedia
+  const ENC=[['wire','السلك','موصل','طريق تسير فيه الكهرباء، مصنوع عادة من النحاس ومغلّف بالبلاستيك لحمايتنا. ليس جهازاً.'],
+    ['battery','البطارية','مصدر طاقة','مضخة الكهرباء: ترفع الفولتية وتدفع الإلكترونات. لها قطب موجب (+) وقطب سالب (−).'],
+    ['res','المقاومة','حماية','تقلل التيار مثل تضييق أنبوب الماء. الأشرطة الملوّنة عليها تخبرنا بقيمتها بالأوم (Ω).'],
+    ['ledR','الثنائي الضوئي LED','ضوء','يحوّل الكهرباء إلى ضوء. له رجل طويلة (+) ورجل قصيرة (−). يحتاج دائماً مقاومة معه!'],
+    ['diode','الثنائي (دايود)','بوابة باتجاه واحد','يسمح للكهرباء بالمرور في اتجاه واحد فقط، مثل باب دوّار لا يدور إلا لجهة واحدة.'],
+    ['switch','المفتاح','تحكم','يفتح الطريق أو يغلقه. مغلق = الكهرباء تمر. مفتوح = الطريق مقطوع.'],
+    ['lamp','المصباح','ضوء','سلك رفيع جداً بداخله يسخن حتى يتوهج ويعطي ضوءاً.'],
+    ['motor','المحرك العادي DC','حركة','بداخله ملفات ومغناطيس، يدور بسرعة عند وصل الكهرباء. لكننا لا نعرف بالضبط أين يتوقف.'],
+    ['buzzer','الجرس (بازر)','صوت','يهتز بسرعة كبيرة فيصنع صوتاً. يُستخدم في المنبّهات والألعاب.'],
+    ['cap','المكثف','مخزن صغير','يخزّن كمية صغيرة من الكهرباء ثم يطلقها بسرعة، مثل خزان ماء صغير.'],
+    ['transistor','الترانزستور','مفتاح ذكي','مفتاح إلكتروني صغير جداً يُفتح ويُغلق بإشارة كهربائية ضعيفة. في هاتفك مليارات منه!'],
+    ['breadboard','لوحة التجارب','تركيب بلا لحام','لوحة مليئة بالثقوب المتصلة من الداخل، نغرس فيها العناصر والأسلاك لنبني الدوائر بسهولة.'],
+    ['jumper','أسلاك التوصيل','توصيل','أسلاك ملوّنة بأطراف جاهزة لتوصيل الأردوينو باللوحات والعناصر.'],
+    ['arduino','الأردوينو أونو','العقل','حاسوب صغير نبرمجه ليتحكم بالأضواء والمحركات والحساسات.'],
+    ['uln','لوحة ULN2003','مكبّر عضلات','تأخذ إشارات الأردوينو الضعيفة وتعطي المحرك تياراً أقوى. أضواؤها الأربعة تُظهر الملفات المشغّلة.'],
+    ['stepper','محرك الخطوة 28BYJ-48','حركة دقيقة','يتحرك خطوة خطوة بدقة، نعرف تماماً أين يتوقف. يعمل بـ 5 فولت ويحتاج ~2048 خطوة للفة.'],
+    ['usb','كابل USB','برمجة وطاقة','ينقل الكود من الحاسوب إلى الأردوينو ويعطيه الكهرباء أيضاً.']];
+  $('#enc').innerHTML=ENC.map(([k,n,tag,d])=>`<div class="e"><svg viewBox="-60 -30 120 60">${partSVG(k,{on:true,glow:k.startsWith('led')?.8:0})}</svg><h4>${n}</h4><div class="tag">${tag} · اضغط للشرح</div><p>${d}</p></div>`).join('');
+  $$('#enc .e').forEach(e=>e.onclick=()=>e.classList.toggle('open'));
+  return{tick(dt,t){const sp=state==='closed'?40+400*clamp(I/0.2,0,1):state==='short'?520:0;
+    dots.forEach(d=>{d.s=(d.s+sp*dt)%P.L;const q=P.at(d.s);d.c.setAttribute('cx',q[0]);d.c.setAttribute('cy',q[1]);d.c.setAttribute('opacity',sp?1:.25)});
+    if(state==='closed'&&I>0.1)motorA+=dt*I*4000;$$('#s5 .rot').forEach(r=>r.setAttribute('transform',`rotate(${motorA})`));
+    const buzz=state==='closed'&&I>0.01;$$('#s5 .bz').forEach(b=>b.setAttribute('transform',buzz?`translate(${Math.sin(t*90)*1.6},0)`:''));$$('#s5 .notes').forEach(n=>n.setAttribute('opacity',buzz?(.5+.5*Math.sin(t*6)):0));
+  }}})();
+
+/* ================= L6 ARDUINO ================= */
+MODS.arduino=(()=>{const svg=$('#s6');let running=false,timer=null,ledOn=false;
+  el('rect',{x:70,y:40,width:600,height:300,rx:22,fill:'#1C7FA6',stroke:'#1B2547','stroke-width':3},svg);
+  [[96,66],[644,66],[96,314],[644,314]].forEach(([x,y])=>el('circle',{cx:x,cy:y,r:9,fill:'#FFFDF8',stroke:'#1B2547','stroke-width':2},svg));
+  const lab=el('text',{x:430,y:250,'text-anchor':'middle','font-size':28,'font-weight':800,fill:'#fff','font-family':'JetBrains Mono',opacity:.9},svg);lab.textContent='ARDUINO UNO';
+  const HS=[
+    {id:'usb',x:30,y:90,w:90,h:70,c:'#C9CED8',n:'منفذ USB',d:'نصل منه كابل USB: يرسل الكود من الحاسوب إلى اللوحة، ويعطيها الكهرباء أيضاً.'},
+    {id:'jack',x:30,y:240,w:80,h:60,c:'#2a2f45',n:'مدخل الطاقة',d:'نصل هنا بطارية أو محوّل (7–12 فولت) لتعمل اللوحة دون حاسوب.'},
+    {id:'dig',x:250,y:52,w:380,h:30,c:'#1B2547',n:'الأطراف الرقمية 0–13',d:'كل طرف يعمل مثل مفتاح: يعطي <b>5 فولت (HIGH)</b> أو <b>0 فولت (LOW)</b>. في مشروعنا نستخدم الأطراف <b>8 و 9 و 10 و 11</b> للمحرك.'},
+    {id:'pwr',x:260,y:300,w:170,h:30,c:'#1B2547',n:'أطراف الطاقة',d:'<b>5V</b> يعطي 5 فولت دائماً، و<b>GND</b> هو الأرضي (0 فولت) — طريق العودة للكهرباء. سنصل منهما لوحة المحرك.'},
+    {id:'ana',x:460,y:300,w:150,h:30,c:'#1B2547',n:'الأطراف التماثلية A0–A5',d:'تقرأ قيماً متدرجة من الحساسات، مثل حساس الضوء أو الحرارة أو مقبض الدوران.'},
+    {id:'chip',x:330,y:170,w:220,h:46,c:'#1B2547',n:'المعالج (العقل)',d:'شريحة صغيرة تحفظ الكود وتنفّذه سطراً سطراً، ملايين المرات في الثانية!'},
+    {id:'led',x:205,y:110,w:40,h:30,c:'#FFC531',n:'ضوء L (الطرف 13)',d:'ضوء صغير على اللوحة متصل بالطرف 13. نستخدمه في أول كود لنا.'},
+    {id:'rst',x:600,y:110,w:44,h:44,c:'#FF6B57',n:'زر إعادة التشغيل',d:'يعيد تشغيل الكود من البداية، مثل زر «ابدأ من جديد».'}];
+  HS.forEach(h=>{const g=el('g',{style:'cursor:pointer'},svg);
+    if(h.id==='dig'||h.id==='pwr'||h.id==='ana'){el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,rx:4,fill:'#1B2547'},g);const n=Math.floor(h.w/19);for(let i=0;i<n;i++)el('rect',{x:h.x+6+i*19,y:h.y+9,width:11,height:12,fill:'#5d6688'},g);
+      const labels=h.id==='dig'?['AREF','GND','13','12','11','10','9','8','7','6','5','4','3','2','1','0']:h.id==='pwr'?['IOREF','RST','3.3V','5V','GND','GND','VIN']:['A0','A1','A2','A3','A4','A5'];
+      const sp=h.w/labels.length;labels.forEach((t,i)=>{const e=el('text',{x:h.x+sp*(i+.5),y:h.id==='dig'?h.y+46:h.y-8,'text-anchor':'middle','font-size':11,'font-weight':700,fill:['8','9','10','11','5V','GND'].includes(t)?'#FFC531':'#fff','font-family':'JetBrains Mono'},g);e.textContent=t})}
+    else if(h.id==='led'){el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,rx:6,fill:'transparent'},g);h.el=el('rect',{x:h.x+12,y:h.y+8,width:16,height:12,rx:3,fill:'#7a6a2a',stroke:'#1B2547','stroke-width':1.5},g);h.glow=el('circle',{cx:h.x+20,cy:h.y+14,r:20,fill:'url(#glowY)',opacity:0},g);const t=el('text',{x:h.x+20,y:h.y+40,'text-anchor':'middle','font-size':12,'font-weight':800,fill:'#fff'},g);t.textContent='L'}
+    else if(h.id==='rst'){el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,rx:8,fill:'#c9ced8',stroke:'#1B2547','stroke-width':2},g);el('circle',{cx:h.x+22,cy:h.y+22,r:12,fill:'#FF6B57',stroke:'#1B2547','stroke-width':2},g)}
+    else if(h.id==='chip'){el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,rx:5,fill:'#1B2547'},g);for(let i=0;i<14;i++){el('rect',{x:h.x+8+i*15,y:h.y-6,width:6,height:6,fill:'#c9ced8'},g);el('rect',{x:h.x+8+i*15,y:h.y+h.h,width:6,height:6,fill:'#c9ced8'},g)}}
+    else{el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,rx:6,fill:h.c,stroke:'#1B2547','stroke-width':2.5},g);if(h.id==='usb')el('rect',{x:h.x+14,y:h.y+16,width:h.w-28,height:h.h-32,rx:3,fill:'#8a91a3'},g);if(h.id==='jack')el('circle',{cx:h.x+48,cy:h.y+30,r:13,fill:'#555b72'},g)}
+    const hl=el('rect',{x:h.x-5,y:h.y-5,width:h.w+10,height:h.h+10,rx:10,fill:'none',stroke:'#FFC531','stroke-width':4,opacity:0},g);h.hl=hl;
+    g.onclick=()=>{HS.forEach(x=>x.hl.setAttribute('opacity',0));hl.setAttribute('opacity',1);$('#l6info').innerHTML=`<b>${h.n}:</b> ${h.d}`}});
+  const on=el('text',{x:150,y:200,'text-anchor':'middle','font-size':12,'font-weight':800,fill:'#7CF5A6'},svg);on.textContent='● ON';
+  // pin meter
+  const pm=el('g',{transform:'translate(150,240)'},svg);el('rect',{x:-50,y:-18,width:100,height:40,rx:10,fill:'#0E1230',stroke:'#1B2547','stroke-width':2},pm);
+  const pmt=el('text',{y:9,'text-anchor':'middle','font-size':18,'font-weight':700,fill:'#7CF5A6','font-family':'JetBrains Mono'},pm);pmt.textContent='13: 0V';
+  const LED=HS.find(h=>h.id==='led');
+  const CODE=[['<span class="kw">void</span> <span class="fn">setup</span>() {','setup تعمل مرة واحدة فقط عند تشغيل اللوحة.'],['  <span class="fn">pinMode</span>(<span class="num">13</span>, OUTPUT);','نخبر الأردوينو أن الطرف 13 «مُخرِج»: سيعطي كهرباء.'],['}',''],
+    ['<span class="kw">void</span> <span class="fn">loop</span>() {','loop تتكرر إلى الأبد ما دامت اللوحة تعمل.'],['  <span class="fn">digitalWrite</span>(<span class="num">13</span>, HIGH);','HIGH = 5 فولت على الطرف 13 ← الضوء يشتعل 💡'],['  <span class="fn">delay</span>(<span class="num" id="cd1">500</span>);','انتظر (بالملّي ثانية). 1000 = ثانية واحدة.'],
+    ['  <span class="fn">digitalWrite</span>(<span class="num">13</span>, LOW);','LOW = 0 فولت ← الضوء ينطفئ'],['  <span class="fn">delay</span>(<span class="num" id="cd2">500</span>);','انتظر مرة أخرى قبل أن تعيد الحلقة.'],['}','']];
+  $('#l6code').innerHTML=CODE.map((c,i)=>`<span class="ln" data-l="${i}"><i>${String(i+1).padStart(2,' ')}  </i>${c[0]}</span>`).join('');
+  $$('#l6code .ln').forEach(l=>l.onclick=()=>{const c=CODE[+l.dataset.l][1];if(c)$('#l6exp').innerHTML='👉 '+c});
+  function hl(i){$$('#l6code .ln').forEach(l=>l.classList.toggle('hl',+l.dataset.l===i));if(CODE[i][1])$('#l6exp').innerHTML='▶ السطر '+ar(i+1)+': '+CODE[i][1]}
+  function setLed(v){ledOn=v;LED.el.setAttribute('fill',v?'#FFE45C':'#7a6a2a');LED.glow.setAttribute('opacity',v?1:0);pmt.textContent='13: '+(v?'5V':'0V');pmt.setAttribute('fill',v?'#FFC531':'#7CF5A6')}
+  function syncCode(){$('#cd1').textContent=$('#l6on').value;$('#cd2').textContent=$('#l6off').value}
+  $('#l6on').oninput=syncCode;$('#l6off').oninput=syncCode;
+  function stop(){running=false;clearTimeout(timer);$('#l6run').textContent='▶ شغّل';setLed(false);$$('#l6code .ln').forEach(l=>l.classList.remove('hl'))}
+  $('#l6run').onclick=()=>{if(running)return stop();running=true;$('#l6run').textContent='⏹ أوقف';
+    const seq=[[1,400,null]];let i=0;
+    const loopSeq=()=>[[4,250,true],[5,+$('#l6on').value||500,null],[6,250,false],[7,+$('#l6off').value||500,null]];
+    let q=[[0,300],[1,400],[3,300]];
+    const step=()=>{if(!running)return;if(!q.length)q=loopSeq();const [ln,ms,act]=q.shift();hl(ln);if(act===true)setLed(true);if(act===false)setLed(false);timer=setTimeout(step,ms)};step()};
+  return{enter(){},tick(){}}})();
+
+/* ================= L7 STEPPER INSIDE ================= */
+MODS.stepper=(()=>{const svg=$('#s7');const C=[[250,190]];const cx=250,cy=190;
+  let en=[1,0,0,0],ang=-90,tgt=-90,auto=false,dir=1,half=false,idx=0,acc=0,steps=0;
+  const FULL=[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],HALF=[[1,0,0,0],[1,1,0,0],[0,1,0,0],[0,1,1,0],[0,0,1,0],[0,0,1,1],[0,0,0,1],[1,0,0,1]];
+  el('circle',{cx,cy,r:160,fill:'url(#steel)',stroke:'#1B2547','stroke-width':3},svg);el('circle',{cx,cy,r:122,fill:'#FFFDF8',stroke:'#1B2547','stroke-width':2.5},svg);
+  const coils=[];const names=['A','B','C','D'],angs=[-90,0,90,180];
+  angs.forEach((a,i)=>{const g=el('g',{transform:`translate(${cx},${cy}) rotate(${a})`,style:'cursor:pointer'},svg);
+    el('rect',{x:78,y:-16,width:62,height:32,rx:4,fill:'#9AA1B5',stroke:'#1B2547','stroke-width':2},g);
+    const w=el('g',{},g);for(let k=0;k<6;k++)el('rect',{x:88+k*8,y:-24,width:6,height:48,rx:3,fill:'#D2783A',stroke:'#1B2547','stroke-width':1.2},w);
+    const face=el('rect',{x:70,y:-20,width:10,height:40,rx:2,fill:'#9AA1B5',stroke:'#1B2547','stroke-width':2},g);
+    const glow=el('circle',{cx:110,cy:0,r:44,fill:'url(#glowR)',opacity:0},g);g.insertBefore(glow,g.firstChild);
+    const t=el('text',{x:0,y:0,'text-anchor':'middle','font-size':22,'font-weight':800,fill:'#1B2547',transform:`translate(${Math.cos(a*Math.PI/180)*0},0)`},svg);
+    t.setAttribute('x',cx+Math.cos(a*Math.PI/180)*182);t.setAttribute('y',cy+Math.sin(a*Math.PI/180)*182+8);t.textContent=names[i];
+    coils.push({g,glow,face});g.onclick=()=>{auto=false;updBtns();en=en.map((v,j)=>j===i?(v?0:1):v);aim()}});
+  const rot=el('g',{},svg);el('circle',{r:58,fill:'#fff',stroke:'#1B2547','stroke-width':3},rot);
+  el('path',{d:'M0 -54 A54 54 0 0 1 0 54 Z',fill:'#FF6B57',transform:'rotate(-90)'},rot);el('path',{d:'M0 -54 A54 54 0 0 0 0 54 Z',fill:'#3C78F0',transform:'rotate(-90)'},rot);
+  // after rotate(-90) right half(red) faces up; we want N at angle 0 direction (right) → we'll use base so N points along +x
+  rot.innerHTML='';el('circle',{r:58,fill:'#fff',stroke:'#1B2547','stroke-width':3},rot);
+  el('path',{d:'M0 -56 A56 56 0 0 1 0 56 Z',fill:'#FF6B57'},rot);el('path',{d:'M0 -56 A56 56 0 0 0 0 56 Z',fill:'#3C78F0'},rot);
+  const tn=el('text',{x:28,y:9,'text-anchor':'middle','font-size':24,'font-weight':800,fill:'#fff'},rot);tn.textContent='N';const ts=el('text',{x:-28,y:9,'text-anchor':'middle','font-size':24,'font-weight':800,fill:'#fff'},rot);ts.textContent='S';
+  el('circle',{r:8,fill:'#1B2547'},rot);
+  // output dial
+  const od=el('g',{transform:'translate(560,110)'},svg);el('circle',{r:60,fill:'#fff',stroke:'#1B2547','stroke-width':3},od);
+  for(let i=0;i<12;i++){const a=i*30*Math.PI/180;el('line',{x1:Math.sin(a)*50,y1:-Math.cos(a)*50,x2:Math.sin(a)*58,y2:-Math.cos(a)*58,stroke:'#1B2547','stroke-width':2},od)}
+  const op=el('g',{},od);el('line',{x1:0,y1:0,x2:0,y2:-46,stroke:'#FF6B57','stroke-width':5,'stroke-linecap':'round'},op);el('circle',{r:7,fill:'#FFC531',stroke:'#1B2547','stroke-width':2},od);
+  const ot=el('text',{x:560,y:200,'text-anchor':'middle','font-size':15,'font-weight':700,fill:'#525C80'},svg);ot.textContent='عمود الإخراج (بعد التروس)';
+  const ot2=el('text',{x:560,y:222,'text-anchor':'middle','font-size':13,'font-weight':600,fill:'#525C80'},svg);ot2.textContent='يدور ببطء شديد لكن بقوة ودقة';
+  // legend
+  const lg=el('text',{x:560,y:290,'text-anchor':'middle','font-size':15,'font-weight':700,fill:'#1B2547'},svg);lg.textContent='🔴 ملف مشغَّل = مغناطيس';
+  const lg2=el('text',{x:560,y:316,'text-anchor':'middle','font-size':15,'font-weight':700,fill:'#1B2547'},svg);lg2.textContent='المغناطيس الدوّار يتجه نحوه';
+  function aim(){let x=0,y=0;en.forEach((v,i)=>{if(v){x+=Math.cos(angs[i]*Math.PI/180);y+=Math.sin(angs[i]*Math.PI/180)}});
+    if(x||y){let d=Math.atan2(y,x)*180/Math.PI;while(d-tgt>180)d-=360;while(d-tgt<-180)d+=360;if(Math.abs(d-tgt)>1){steps+=Math.round((d-tgt)/(half?45:90))||0}tgt=d}
+    drawCoils()}
+  function drawCoils(){en.forEach((v,i)=>{coils[i].glow.setAttribute('opacity',v?1:0);coils[i].face.setAttribute('fill',v?'#FF6B57':'#9AA1B5')});
+    const S=half?HALF:FULL;const ci=S.findIndex(r=>r.join()===en.join());
+    $('#seq').innerHTML='<tr><th>#</th><th>IN1 (A)</th><th>IN2 (B)</th><th>IN3 (C)</th><th>IN4 (D)</th></tr>'+S.map((r,i)=>`<tr class="${i===ci?'cur':''}"><td>${i+1}</td>${r.map(v=>`<td class="${v?'one':''}">${v}</td>`).join('')}</tr>`).join('');
+    $('#r7s').textContent=steps;$('#r7o').textContent=(steps*360/(half?4096:2048)).toFixed(1)+'°'}
+  function updBtns(){$('#l7auto').textContent=auto?'⏸ إيقاف':'▶ تشغيل تلقائي';$('#l7auto').classList.toggle('on',auto);$('#l7dir').textContent=dir>0?'↻ مع عقارب الساعة':'↺ عكس عقارب الساعة';$('#l7mode').textContent=half?'نمط: نصف خطوة':'نمط: خطوة كاملة'}
+  $('#l7auto').onclick=()=>{auto=!auto;const S=half?HALF:FULL;let k=S.findIndex(r=>r.join()===en.join());idx=k<0?0:k;updBtns()};
+  $('#l7dir').onclick=()=>{dir*=-1;updBtns()};$('#l7mode').onclick=()=>{half=!half;const S=half?HALF:FULL;let k=S.findIndex(r=>r.join()===en.join());idx=k<0?0:k;en=[...S[idx]];aim();updBtns()};
+  updBtns();aim();
+  return{tick(dt){
+    if(auto){acc+=dt*(+$('#l7spd').value);if(acc>=1){acc=0;const S=half?HALF:FULL;idx=(idx+dir+S.length)%S.length;en=[...S[idx]];aim()}}
+    ang=lerp(ang,tgt,1-Math.exp(-dt*9));rot.setAttribute('transform',`translate(${cx},${cy}) rotate(${ang})`);
+    op.setAttribute('transform',`rotate(${steps*360/(half?4096:2048)*16})`);
+    const n=en.reduce((a,b)=>a+b,0);
+    if(n===0)say('b7','كل الملفات مطفأة، فالمغناطيس حرّ ولا شيء يجذبه. <b>اضغط على أحد الملفات</b> لتشغيله!');
+    else if(auto)say('b7',`🔁 الأردوينو يشغّل الملفات <b>بالترتيب</b> (انظر الجدول) فيتبعها المغناطيس خطوة بعد خطوة ${dir>0?'مع':'عكس'} عقارب الساعة. ${half?'في نمط «نصف خطوة» نشغّل ملفين معاً أحياناً، فتصبح الخطوات أصغر وأنعم.':'جرّب نمط «نصف خطوة»!'}`,'good');
+    else if(n>=3)say('b7','شغّلت ملفات كثيرة متقابلة! تتعارض قوتها فيتشوش المغناطيس. في المحرك الحقيقي نشغّل ملفاً أو ملفين متجاورين فقط.','warn');
+    else say('b7',`👏 شغّلت ${n===1?'الملف '+names[en.indexOf(1)]:'ملفين متجاورين'} فصار <b>مغناطيساً</b> وجذب القطب الأحمر (N) نحوه. الآن شغّل الملف التالي… هذه هي <b>الخطوة</b>!`,'good');
+  }}})();
+
+/* ================= L8 PROJECT ================= */
+MODS.project=(()=>{const svg=$('#s8');let wired=[0,0,0,0,0,0,0],running=false,phase=0,remain=0,pause=0,shaft=0,stepI=0,uploading=false,upT=0;
+  // Arduino
+  el('rect',{x:20,y:80,width:230,height:250,rx:14,fill:'#1C7FA6',stroke:'#1B2547','stroke-width':3},svg);
+  el('rect',{x:4,y:130,width:44,height:46,rx:5,fill:'#C9CED8',stroke:'#1B2547','stroke-width':2},svg);
+  el('rect',{x:80,y:88,width:150,height:16,rx:3,fill:'#1B2547'},svg);
+  const PINS={8:200,9:180,10:160,11:140,12:120,13:100};
+  Object.entries(PINS).forEach(([p,x])=>{el('rect',{x:x-5,y:91,width:10,height:10,fill:['8','9','10','11'].includes(p)?'#FFC531':'#5d6688'},svg);const t=el('text',{x,y:120,'text-anchor':'middle','font-size':12,'font-weight':800,fill:'#fff','font-family':'JetBrains Mono'},svg);t.textContent=p});
+  el('rect',{x:70,y:308,width:70,height:16,rx:3,fill:'#1B2547'},svg);
+  [[86,'5V'],[114,'GND']].forEach(([x,t])=>{el('rect',{x:x-5,y:311,width:10,height:10,fill:t==='5V'?'#FF6B57':'#C9CED8'},svg);const e=el('text',{x,y:300,'text-anchor':'middle','font-size':11,'font-weight':800,fill:'#fff','font-family':'JetBrains Mono'},svg);e.textContent=t});
+  el('rect',{x:110,y:190,width:110,height:30,rx:4,fill:'#1B2547'},svg);
+  const at=el('text',{x:135,y:262,'text-anchor':'middle','font-size':17,'font-weight':800,fill:'#fff','font-family':'JetBrains Mono'},svg);at.textContent='UNO';
+  // ULN2003
+  el('rect',{x:330,y:110,width:170,height:210,rx:10,fill:'#2E9D5B',stroke:'#1B2547','stroke-width':3},svg);
+  const IN=[150,170,190,210];IN.forEach((y,i)=>{el('rect',{x:340,y:y-5,width:10,height:10,fill:'#FFC531'},svg);const t=el('text',{x:356,y:y+5,'font-size':12,'font-weight':800,fill:'#fff','font-family':'JetBrains Mono'},svg);t.textContent='IN'+(i+1)});
+  el('rect',{x:395,y:140,width:44,height:90,rx:4,fill:'#1B2547'},svg);const ut=el('text',{x:417,y:190,'text-anchor':'middle','font-size':10,'font-weight':800,fill:'#fff','font-family':'JetBrains Mono',transform:'rotate(-90 417 186)'},svg);ut.textContent='ULN2003';
+  const leds=[];['A','B','C','D'].forEach((n,i)=>{leds.push(el('circle',{cx:470,cy:150+i*20,r:6,fill:'#6b2a2a',stroke:'#1B2547','stroke-width':1.5},svg));const t=el('text',{x:486,y:155+i*20,'font-size':11,'font-weight':800,fill:'#fff'},svg);t.textContent=n});
+  [[440,'+'],[462,'−']].forEach(([x,t])=>{el('rect',{x:x-5,y:302,width:10,height:10,fill:t==='+'?'#FF6B57':'#C9CED8'},svg);const e=el('text',{x,y:296,'text-anchor':'middle','font-size':14,'font-weight':800,fill:'#fff'},svg);e.textContent=t});
+  el('rect',{x:484,y:240,width:18,height:56,rx:3,fill:'#F4F4F0',stroke:'#1B2547','stroke-width':2},svg);
+  const lt=el('text',{x:415,y:345,'text-anchor':'middle','font-size':13,'font-weight':700,fill:'#525C80'},svg);lt.textContent='لوحة التشغيل';
+  // motor
+  const mot=el('g',{},svg);el('rect',{x:540,y:200,width:150,height:28,rx:14,fill:'url(#steel)',stroke:'#1B2547','stroke-width':2.5},mot);
+  el('circle',{cx:615,cy:214,r:66,fill:'url(#steel)',stroke:'#1B2547','stroke-width':3},mot);el('circle',{cx:615,cy:214,r:44,fill:'#DCE0EA',stroke:'#1B2547','stroke-width':2},mot);
+  el('circle',{cx:615,cy:190,r:14,fill:'#C9CED8',stroke:'#1B2547','stroke-width':2},mot);
+  const shaftG=el('g',{},svg);el('circle',{r:7,fill:'#FFC531',stroke:'#1B2547','stroke-width':2},shaftG);el('path',{d:'M-4 -6 L0 -34 L4 -6Z',fill:'#FF6B57',stroke:'#1B2547','stroke-width':1.5},shaftG);
+  const mt=el('text',{x:615,y:308,'text-anchor':'middle','font-size':13,'font-weight':700,fill:'#525C80'},svg);mt.textContent='28BYJ-48';
+  const cable=el('g',{},svg);
+  const CBL=['#3C78F0','#FF8FB1','#FFC531','#FF8A00','#FF4D3D'];
+  // wires
+  const WIRES=[{d:'M200,96 V66 H318 V150 H345',c:'#FF8A00',t:'الطرف <b>8</b> ← <b>IN1</b>'},{d:'M180,96 V56 H310 V170 H345',c:'#FFC531',t:'الطرف <b>9</b> ← <b>IN2</b>'},
+    {d:'M160,96 V46 H302 V190 H345',c:'#2BD46B',t:'الطرف <b>10</b> ← <b>IN3</b>'},{d:'M140,96 V36 H294 V210 H345',c:'#3C78F0',t:'الطرف <b>11</b> ← <b>IN4</b>'},
+    {d:'M86,316 V352 H440 V307',c:'#FF4D3D',t:'<b>5V</b> ← <b>+</b> (الطاقة)'},{d:'M114,316 V342 H462 V307',c:'#1B2547',t:'<b>GND</b> ← <b>−</b> (الأرضي)'},{d:'',c:'',t:'قابس المحرك الأبيض ← لوحة التشغيل'}];
+  const wEls=WIRES.map(w=>w.d?el('path',{d:w.d,fill:'none',stroke:w.c,'stroke-width':5,'stroke-linecap':'round','stroke-linejoin':'round',opacity:0},svg):null);
+  svg.appendChild(shaftG);
+  function drawCable(){cable.innerHTML='';const plugged=wired[6];
+    CBL.forEach((c,i)=>{const y=246+i*10;el('path',{d:plugged?`M570,${262+i*3} C548,${270+i*3} 530,${y} 502,${y}`:`M570,${262+i*3} C560,${300+i*4} 560,${330+i*3} 600,${350+i*2}`,fill:'none',stroke:c,'stroke-width':3.5},cable)});
+    if(!plugged){el('rect',{x:596,y:340,width:16,height:28,rx:3,fill:'#F4F4F0',stroke:'#1B2547','stroke-width':2},cable)}}
+  svg.insertBefore(cable,shaftG);
+  function render(){wEls.forEach((e,i)=>e&&e.setAttribute('opacity',wired[i]?1:0));drawCable();
+    $('#check').innerHTML=WIRES.map((w,i)=>`<li class="${wired[i]?'ok':''}"><span class="dot" style="background:${w.c||'#F4F4F0'}"></span><span>${ar(i+1)}. ${w.t}</span><button class="btn" data-w="${i}">${wired[i]?'افصل':'وصّل ✓'}</button></li>`).join('');
+    $$('#check [data-w]').forEach(b=>b.onclick=()=>{const i=+b.dataset.w;wired[i]=wired[i]?0:1;render();if(running)stopRun('⚠️ غيّرت التوصيل أثناء التشغيل! افصل الكهرباء دائماً قبل التعديل.')})}
+  $('#l8all').onclick=()=>{wired=wired.map(()=>1);render()};$('#l8undo').onclick=()=>{wired=wired.map(()=>0);stopRun();render()};
+  // code
+  function codeLines(){const rpm=$('#l8rpm').value,st=$('#l8steps').value,wrong=$('#l8wrong').checked;return[
+    ['<span class="kw">#include</span> <span class="str">&lt;Stepper.h&gt;</span>','نستدعي «مكتبة» جاهزة اسمها Stepper تعرف كيف تشغّل ملفات المحرك بالترتيب الصحيح.'],
+    ['',''],
+    ['<span class="kw">const int</span> stepsPerRevolution = <span class="num">2048</span>;','عدد الخطوات التي يحتاجها محرك 28BYJ-48 ليكمل لفة كاملة: 2048.'],
+    [`<span class="fn">Stepper</span> myStepper(stepsPerRevolution, ${wrong?'<span class="num">8</span>, <span class="num">9</span>, <span class="num">10</span>, <span class="num">11</span>':'<span class="num">8</span>, <span class="num">10</span>, <span class="num">9</span>, <span class="num">11</span>'});`,'نصنع محركاً اسمه myStepper ونخبره بالأطراف. <b>انتبه للترتيب 8, 10, 9, 11</b> (أي IN1, IN3, IN2, IN4) — هذا ما يناسب هذا المحرك. لو كتبنا 8, 9, 10, 11 سيهتز ولا يدور!'],
+    ['',''],
+    ['<span class="kw">void</span> <span class="fn">setup</span>() {','تعمل مرة واحدة عند التشغيل.'],
+    [`  myStepper.<span class="fn">setSpeed</span>(<span class="num">${rpm}</span>);`,`نحدد السرعة: ${rpm} لفة في الدقيقة. هذا المحرك يعمل جيداً حتى 15 تقريباً؛ أسرع من ذلك يهتز ولا يلحق!`],
+    ['  Serial.<span class="fn">begin</span>(<span class="num">9600</span>);','نفتح «الشاشة التسلسلية» ليكتب لنا الأردوينو رسائل.'],
+    ['}',''],
+    ['',''],
+    ['<span class="kw">void</span> <span class="fn">loop</span>() {','تتكرر إلى الأبد.'],
+    ['  Serial.<span class="fn">println</span>(<span class="str">"clockwise"</span>);','يكتب على الشاشة: مع عقارب الساعة.'],
+    [`  myStepper.<span class="fn">step</span>(<span class="num">${st}</span>);`,`تحرّك ${st} خطوة إلى الأمام (${({512:'ربع لفة',1024:'نصف لفة',2048:'لفة كاملة',4096:'لفتان'})[st]}).`],
+    ['  <span class="fn">delay</span>(<span class="num">1000</span>);','استرح ثانية واحدة.'],
+    ['',''],
+    ['  Serial.<span class="fn">println</span>(<span class="str">"counterclockwise"</span>);','يكتب: عكس عقارب الساعة.'],
+    [`  myStepper.<span class="fn">step</span>(<span class="num">-${st}</span>);`,'الرقم السالب (−) يعني: تحرّك بالاتجاه المعاكس!'],
+    ['  <span class="fn">delay</span>(<span class="num">1000</span>);','استرح ثانية ثم تتكرر الحلقة من جديد.'],
+    ['}','']]}
+  let LINES=[];
+  function renderCode(){LINES=codeLines();$('#l8code').innerHTML=LINES.map((c,i)=>`<span class="ln" data-l="${i}"><i>${String(i+1).padStart(2,' ')}  </i>${c[0]||' '}</span>`).join('');
+    $$('#l8code .ln').forEach(l=>l.onclick=()=>{const c=LINES[+l.dataset.l][1];$$('#l8code .ln').forEach(x=>x.classList.remove('sel'));l.classList.add('sel');$('#l8exp').innerHTML=c?'👉 '+c:'سطر فارغ لترتيب الكود 🙂'})}
+  ['#l8rpm','#l8steps','#l8wrong'].forEach(s=>$(s).addEventListener('input',()=>{renderCode();if(running)stopRun('غيّرت الكود — ارفعه من جديد ⬆')}));renderCode();
+  function plain(){const rpm=$('#l8rpm').value,st=$('#l8steps').value,wrong=$('#l8wrong').checked;return `#include <Stepper.h>
+
+const int stepsPerRevolution = 2048;  // steps for one full turn (28BYJ-48)
+// pin order IN1, IN3, IN2, IN4
+Stepper myStepper(stepsPerRevolution, ${wrong?'8, 9, 10, 11':'8, 10, 9, 11'});
+
+void setup() {
+  myStepper.setSpeed(${rpm});   // revolutions per minute
+  Serial.begin(9600);
+}
+
+void loop() {
+  Serial.println("clockwise");
+  myStepper.step(${st});
+  delay(1000);
+
+  Serial.println("counterclockwise");
+  myStepper.step(-${st});
+  delay(1000);
+}
+`}
+  $('#l8copy').onclick=async()=>{try{await navigator.clipboard.writeText(plain());$('#l8copy').textContent='✅ نُسخ!'}catch(e){$('#l8copy').textContent='حدد الكود وانسخه يدوياً'}setTimeout(()=>$('#l8copy').textContent='📋 انسخ الكود',1800)};
+  const ser=t=>{const s=$('#serial');s.textContent+=t+'\n';s.scrollTop=s.scrollHeight};
+  function hl(i){$$('#l8code .ln').forEach(l=>l.classList.toggle('hl',+l.dataset.l===i))}
+  function stopRun(msg){running=false;uploading=false;hl(-1);leds.forEach(l=>l.setAttribute('fill','#6b2a2a'));if(msg)say('b8',msg,'warn')}
+  $('#l8stop').onclick=()=>{stopRun();say('b8','⏹ أوقفنا المحرك. اضغط «ارفع الكود» للتشغيل من جديد.')};
+  $('#l8up').onclick=()=>{const miss=wired.findIndex(w=>!w);$('#serial').textContent='';
+    if(miss>=0){say('b8',`🔌 قبل الرفع: لم تكمل التوصيل! الخطوة رقم ${ar(miss+1)}: ${WIRES[miss].t} غير موصولة.`,'warn');return}
+    stopRun();uploading=true;upT=0;say('b8','⬆️ جاري رفع الكود من الحاسوب إلى الأردوينو عبر كابل USB…')};
+  render();
+  const PH=[[1,0,1,0],[0,1,1,0],[0,1,0,1],[1,0,0,1]];
+  return{tick(dt,t){
+    if(uploading){upT+=dt;$('#l8bar').style.width=clamp(upT/1.6*100,0,100)+'%';if(upT>=1.6){uploading=false;ser('Done uploading.');running=true;phase=0;remain=0;pause=0;}}
+    if(!running){shaftG.setAttribute('transform',`translate(615,214) rotate(${shaft})`);return}
+    const rpm=+$('#l8rpm').value,st=+$('#l8steps').value,mult=$('#l8fast').checked?4:1,wrong=$('#l8wrong').checked,stall=rpm>15||wrong;
+    // phases: 0 print cw,1 move cw,2 delay,3 print ccw,4 move ccw,5 delay
+    if(phase===0){hl(11);ser('clockwise');phase=1;remain=st}
+    else if(phase===1||phase===4){hl(phase===1?12:16);const sps=rpm*2048/60*mult;const n=Math.min(remain,sps*dt);remain-=n;stepI+=n*(phase===1?1:-1);
+      if(!stall)shaft+=n*360/2048*(phase===1?1:-1);else shaft+=Math.sin(t*60)*2;
+      const ph=PH[((Math.floor(stepI)%4)+4)%4];leds.forEach((l,i)=>l.setAttribute('fill',ph[i]?'#FF4D3D':'#6b2a2a'));
+      if(remain<=0){phase=phase===1?2:5;pause=0;leds.forEach(l=>l.setAttribute('fill','#6b2a2a'))}}
+    else if(phase===2||phase===5){hl(phase===2?13:17);pause+=dt*mult;if(pause>=1)phase=phase===2?3:0}
+    else if(phase===3){hl(15);ser('counterclockwise');phase=4;remain=st}
+    shaftG.setAttribute('transform',`translate(615,214) rotate(${shaft})`);
+    if(wrong)say('b8','😵 المحرك <b>يهتز ولا يدور!</b> لأن ترتيب الأطراف في الكود 8, 9, 10, 11 يشغّل الملفات بترتيب خاطئ. أزل علامة «جرّب خطأ ترتيب الأطراف» لتعود إلى 8, 10, 9, 11.','warn');
+    else if(rpm>15)say('b8',`😵 السرعة ${rpm} <b>كبيرة جداً</b> على هذا المحرك — الملفات تتبدل أسرع مما يستطيع المغناطيس أن يلحق، فيهتز ويتوقف. خفّضها إلى 10.`,'warn');
+    else if(phase===1||phase===4)say('b8',`🎉 <b>المحرك يدور!</b> ${phase===1?'مع':'عكس'} عقارب الساعة. لاحظ الأضواء الحمراء على لوحة التشغيل: إنها الملفات تشتغل بالترتيب، تماماً كما رأيت في المحطة ٨!`,'good');
+    else say('b8','⏸ <b>delay(1000)</b>: المحرك يستريح ثانية واحدة قبل أن يكمل…');
+  },enter(){if(!running&&!uploading)say('b8','وصّل الأسلاك واحداً واحداً من قائمة «خطوات التوصيل»، ثم اضغط <b>«ارفع الكود وشغّل»</b>. وإذا أردت التجربة على الحقيقة، انسخ الكود والصقه في Arduino IDE 👍')}}})();
+
+
+/* ================= BREADBOARD ================= */
+MODS.breadboard=(()=>{const svg=$('#s6b');const X0=110,DX=19,COLS=30;const ROWS='abcdefghij';
+  const ry=r=>{const i=ROWS.indexOf(r);return i<5?120+i*19:232+(i-5)*19};const cx=c=>X0+(c-1)*DX;
+  const hp=(id)=>{if(id==='t+')return null;const r=id[0],c=+id.slice(1);return[cx(c),ry(r)]};
+  el('rect',{x:70,y:28,width:620,height:352,rx:14,fill:'#F7F6F1',stroke:'#1B2547','stroke-width':3},svg);
+  el('rect',{x:80,y:209,width:600,height:8,rx:4,fill:'#E4E1D6'},svg);
+  const railY={tp:46,tn:66,bn:342,bp:362};
+  [['tp','#FF4D3D','+'],['tn','#3C78F0','−'],['bn','#3C78F0','−'],['bp','#FF4D3D','+']].forEach(([k,c,t])=>{el('line',{x1:96,y1:railY[k]+(k[1]==='p'?-9:9)*(k[0]==='t'?1:-1)*0+ (k==='tp'?-10:k==='tn'?10:k==='bn'?-10:10),x2:670,y2:railY[k]+(k==='tp'?-10:k==='tn'?10:k==='bn'?-10:10),stroke:c,'stroke-width':2.5},svg);const e=el('text',{x:86,y:railY[k]+6,'text-anchor':'middle','font-size':16,'font-weight':800,fill:c},svg);e.textContent=t});
+  const holes={};const hg=el('g',{},svg);
+  function addHole(id,x,y,group){const g=el('g',{style:'cursor:pointer'},hg);const h=el('rect',{x:x-5,y:y-5,width:10,height:10,rx:2,fill:'#3c3f4f'},g);el('rect',{x:x-9,y:y-9,width:18,height:18,fill:'transparent'},g);holes[id]={h,x,y,group};g.onclick=()=>explore(id)}
+  for(let c=1;c<=COLS;c++){for(const r of ROWS)addHole(r+c,cx(c),ry(r),(ROWS.indexOf(r)<5?'T':'B')+c);
+    if(c%5!==0){['tp','tn','bn','bp'].forEach(k=>addHole(k+c,cx(c),railY[k],k))}}
+  for(let c=1;c<=COLS;c+=1){if(c%5===1||c===30){const t=el('text',{x:cx(c),y:102,'text-anchor':'middle','font-size':11,fill:'#525C80','font-family':'JetBrains Mono'},svg);t.textContent=c}}
+  ROWS.split('').forEach(r=>{const t=el('text',{x:96,y:ry(r)+4,'text-anchor':'middle','font-size':11,fill:'#525C80','font-family':'JetBrains Mono'},svg);t.textContent=r});
+  const hlG=el('g',{},svg);
+  function explore(id){if(mode!=='explore')setMode('explore');const grp=holes[id].group;hlG.innerHTML='';let n=0;
+    for(const k in holes){if(holes[k].group===grp){n++;const H=holes[k];el('rect',{x:H.x-8,y:H.y-8,width:16,height:16,rx:4,fill:'none',stroke:'#14A89A','stroke-width':3},hlG)}}
+    const H=holes[id];el('circle',{cx:H.x,cy:H.y,r:10,fill:'#FFC531',opacity:.6},hlG);
+    if(grp.length>2&&grp[0]!=='T'&&grp[0]!=='B')say('b6b',`هذا ثقب في <b>خط الطاقة ${grp[1]==='p'?'الموجب (+)':'السالب (−)'}</b>. كل الصف الطويل متصل (${ar(n)} ثقباً)! نصله عادة بـ 5V أو GND ليصبح متاحاً في كل مكان.`,'good');
+    else say('b6b',`ضغطت على الثقب <b class="mono">${id}</b>. الثقوب المضيئة باللون الأخضر (${ar(n)}) كلها متصلة بشريط معدني واحد تحته — في <b>العمود ${ar(id.slice(1))}</b> فقط، ولا تعبر الفجوة الوسطى.`,'good')}
+  // build steps
+  const partsG=el('g',{},svg);const flowG=el('g',{},svg);
+  const tag=(x,y,t,c)=>{const g=el('g',{},svg);el('rect',{x:x-26,y:y-13,width:52,height:26,rx:8,fill:c,stroke:'#1B2547','stroke-width':2},g);const e=el('text',{x,y:y+5,'text-anchor':'middle','font-size':13,'font-weight':800,fill:'#fff','font-family':'JetBrains Mono'},g);e.textContent=t;return g};
+  tag(36,120,'13','#1C7FA6');tag(36,66,'GND','#1B2547');
+  const lab=el('text',{x:36,y:160,'text-anchor':'middle','font-size':12,'font-weight':700,fill:'#525C80'},svg);lab.textContent='أردوينو';
+  const STEPS=[
+    {t:'سلك أحمر من الطرف <b>13</b> إلى الثقب <b class="mono">a3</b>',draw:g=>{el('path',{d:`M62,120 H${cx(3)} `,stroke:'#FF4D3D','stroke-width':5,fill:'none','stroke-linecap':'round'},g);dot(g,'a3')}},
+    {t:'مقاومة 220Ω من <b class="mono">c3</b> إلى <b class="mono">c8</b>',draw:g=>{if(mist){const x=cx(3);el('line',{x1:x,y1:ry('c'),x2:x,y2:ry('e'),stroke:'#1B2547','stroke-width':3},g);const r=el('g',{transform:`translate(${x},${(ry('c')+ry('e'))/2}) rotate(90) scale(.5)`},g);r.innerHTML=partSVG('res');dot(g,'c3');dot(g,'e3')}
+      else{const y=ry('c');el('line',{x1:cx(3),y1:y,x2:cx(8),y2:y,stroke:'#1B2547','stroke-width':3},g);const r=el('g',{transform:`translate(${(cx(3)+cx(8))/2},${y}) scale(.62)`},g);r.innerHTML=partSVG('res');dot(g,'c3');dot(g,'c8')}}},
+    {t:'LED: الرجل <b>الطويلة (+)</b> في <b class="mono">d8</b> والقصيرة <b>(−)</b> في <b class="mono">d9</b>',draw:g=>{const y=ry('d');el('line',{x1:cx(8),y1:y,x2:cx(8),y2:y-22,stroke:'#1B2547','stroke-width':2.5},g);el('line',{x1:cx(9),y1:y,x2:cx(9),y2:y-18,stroke:'#1B2547','stroke-width':2.5},g);
+      ledEl=el('g',{transform:`translate(${(cx(8)+cx(9))/2},${y-30}) scale(.75)`},g);ledEl.innerHTML=partSVG('ledR',{glow:0}).replace(/<line[^>]*\/>/,'');dot(g,'d8');dot(g,'d9')}},
+    {t:'سلك أسود من <b class="mono">a9</b> إلى خط الأرضي <b>(−)</b> العلوي',draw:g=>{el('path',{d:`M${cx(9)},${ry('a')} V${railY.tn}`,stroke:'#1B2547','stroke-width':5,fill:'none','stroke-linecap':'round'},g);dot(g,'a9');dot(g,'tn9')}},
+    {t:'سلك أسود من <b>GND</b> في الأردوينو إلى خط <b>(−)</b>',draw:g=>{el('path',{d:`M62,66 H${cx(2)}`,stroke:'#1B2547','stroke-width':5,fill:'none','stroke-linecap':'round'},g);dot(g,'tn2')}}];
+  function dot(g,id){const H=holes[id];if(H)el('circle',{cx:H.x,cy:H.y,r:4.5,fill:'#FFC531',stroke:'#1B2547','stroke-width':1.5},g)}
+  let mode='build',done=0,mist=false,run=false,ledEl=null,blink=0;
+  const PATH=()=>makePath([[62,120],[cx(3),120],[cx(3),ry('c')],[cx(8),ry('c')],[cx(8),ry('d')],[cx(9),ry('d')],[cx(9),ry('a')],[cx(9),railY.tn],[cx(2),railY.tn],[62,66]]);
+  let P=PATH();const fd=[];for(let i=0;i<16;i++)fd.push({s:i*P.L/16,c:el('circle',{r:3.5,fill:'#FFC531',stroke:'#1B2547','stroke-width':1.2,opacity:0},flowG)});
+  function draw(){partsG.innerHTML='';ledEl=null;for(let i=0;i<done;i++){const g=el('g',{},partsG);STEPS[i].draw(g)}
+    $('#bbSteps').innerHTML=STEPS.map((st,i)=>`<li class="${i<done?'ok':''}"><span class="dot" style="background:${i<done?'#14A89A':'#fff'}"></span><span>${ar(i+1)}. ${st.t}${i===1&&mist?' <b style="color:#FF6B57">(وضعناها خطأً في العمود نفسه!)</b>':''}</span></li>`).join('');
+    $('#bbRun').disabled=done<STEPS.length;$('#bbRun').textContent=run?'⏹ أوقف':'▶ شغّل (الطرف 13)';$('#bbMistake').textContent=mist?'✅ صحّح الخطأ':'🙈 جرّب خطأً شائعاً';
+    $('#bbExplore').classList.toggle('on',mode==='explore')}
+  function setMode(m){mode=m;if(m==='build')hlG.innerHTML='';draw()}
+  $('#bbExplore').onclick=()=>{setMode(mode==='explore'?'build':'explore');if(mode==='explore')say('b6b','🔍 <b>وضع الاستكشاف:</b> اضغط على أي ثقب لترى الشريط المخفي تحته.')};
+  $('#bbNext').onclick=()=>{setMode('build');if(done<STEPS.length)done++;draw()};
+  $('#bbAll').onclick=()=>{setMode('build');done=STEPS.length;draw()};
+  $('#bbRun').onclick=()=>{run=!run;draw()};
+  $('#bbMistake').onclick=()=>{mist=!mist;if(done<2)done=STEPS.length;draw()};
+  draw();
+  return{tick(dt,t){blink=run?(Math.floor(t*1.6)%2):0;const ok=run&&!mist&&blink;
+    if(ledEl)ledEl.innerHTML=partSVG('ledR',{glow:ok?1:0}).replace(/<line[^>]*\/>/,'');
+    fd.forEach(d=>{d.s=(d.s+(ok?90:0)*dt)%P.L;const q=P.at(d.s);d.c.setAttribute('cx',q[0]);d.c.setAttribute('cy',q[1]);d.c.setAttribute('opacity',ok?1:0)});
+    if(mode==='explore')return;
+    if(done<STEPS.length)return say('b6b',`🔧 لنركّب دائرة LED على لوحة التجارب! اضغط <b>«الخطوة التالية»</b> (${ar(done)} من ${ar(STEPS.length)}). ${done===0?'وجرّب «وضع الاستكشاف» أولاً لتفهم الثقوب.':''}`);
+    if(mist&&run)return say('b6b','😮 الـLED لا يضيء! وضعنا رِجلي المقاومة في <b>العمود 3 نفسه</b>، وهما متصلتان أصلاً بالشريط المخفي. فالكهرباء لا تصل أبداً إلى العمود 8 حيث الـLED. <b>القاعدة:</b> كل رجل من العنصر في عمود مختلف.','warn');
+    if(run)return say('b6b','✨ الطرف 13 يعطي 5 فولت ثم 0 فولت بالتناوب، فيومض الـLED! تابع النقاط الصفراء: <b>13 ← العمود 3 ← المقاومة ← العمود 8 ← LED ← العمود 9 ← خط (−) ← GND</b>.','good');
+    say('b6b','✅ اكتمل التركيب! اضغط <b>«شغّل»</b> ليرسل الأردوينو الكهرباء من الطرف 13.','good')}}})();
+
+/* ================= CHALLENGES ================= */
+MODS.challenges=(()=>{const box=$('#chs');let solved=store('sharara-ch')||{};
+  const sel=(id,opts,def)=>`<select data-k="${id}">${opts.map(o=>`<option ${o==def?'selected':''}>${o}</option>`).join('')}</select>`;
+  const L=a=>a.map(x=>`<span class="ln">${x}</span>`).join('');
+  const CH=[
+   {id:'c1',t:'١. ربع لفة فقط',story:'ذراع الروبوت يجب أن يدور <b>90 درجة</b> فقط ليلوّح بيده 👋. لفة كاملة = 2048 خطوة… كم خطوة لربع لفة؟',
+    code:()=>L(['<span class="kw">void</span> <span class="fn">loop</span>() {','  myStepper.<span class="fn">step</span>('+sel('v',[256,512,1024,2048],2048)+');','  <span class="fn">delay</span>(<span class="num">2000</span>);','}']),extra:''},
+   {id:'c2',t:'٢. كرّر ثلاث مرات',story:'نريد أن يلوّح الذراع <b>3 مرات</b> (ربع لفة في كل مرة) ثم يتوقف. حلقة <span class="mono">for</span> تكرر الأوامر بدلاً من أن نكتبها مراراً.',
+    code:()=>L(['<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; '+sel('v',[1,2,3,4,5],1)+'; i++) {','  myStepper.<span class="fn">step</span>(<span class="num">512</span>);','  <span class="fn">delay</span>(<span class="num">500</span>);','}']),extra:''},
+   {id:'c3',t:'٣. الزر السحري',story:'المحرك يجب أن يدور <b>فقط عندما تضغط الزر</b> الموصول بالطرف 2. عند الضغط يصبح الطرف 5 فولت. اختر الكلمة الصحيحة ثم <b>اضغط مطولاً</b> على الزر الأحمر.',
+    code:()=>L(['<span class="kw">void</span> <span class="fn">loop</span>() {','  <span class="kw">if</span> (<span class="fn">digitalRead</span>(<span class="num">2</span>) == '+sel('v',['HIGH','LOW'],'LOW')+') {','    myStepper.<span class="fn">step</span>(<span class="num">32</span>);','  }','}']),extra:'<button class="btn hold" data-hold>🔴 اضغط مطولاً</button>'},
+   {id:'c4',t:'٤. مقبض السرعة',story:'نصل <b>مقبض دوّار</b> (بوتنشيوميتر) بالطرف A0، فيقرأ رقماً من 0 إلى 1023. الأمر <span class="mono">map</span> يحوّله إلى سرعة. ما أقصى سرعة آمنة لمحركنا؟ (تذكّر المحطة ٩ 😉)',
+    code:()=>L(['<span class="kw">int</span> knob = <span class="fn">analogRead</span>(A0);','<span class="kw">int</span> rpm = <span class="fn">map</span>(knob, <span class="num">0</span>, <span class="num">1023</span>, <span class="num">1</span>, '+sel('v',[5,15,50],50)+');','myStepper.<span class="fn">setSpeed</span>(rpm);','myStepper.<span class="fn">step</span>(<span class="num">32</span>);']),extra:'<label class="ctl" style="margin-top:6px">🎛️ المقبض <input type="range" data-knob min="0" max="1023" value="1023" style="width:110px"></label>'}];
+  const ST={};
+  box.innerHTML=CH.map(c=>`<div class="ch ${solved[c.id]?'solved':''}" id="${c.id}"><h3>${c.t} ${solved[c.id]?'✅':''}</h3><p class="story">${c.story}</p>
+    <div class="row"><div><div class="code">${c.code()}</div><div class="controls" style="margin:8px 0 0">${c.id==='c3'||c.id==='c4'?'':'<button class="btn primary" data-run>▶ جرّب</button>'}${c.extra}</div></div>
+    <svg class="dial" viewBox="-75 -72 150 162"></svg></div><div class="res"></div></div>`).join('');
+  CH.forEach(c=>{const card=$('#'+c.id),svg=card.querySelector('svg.dial');
+    el('circle',{r:62,fill:'url(#steel)',stroke:'#1B2547','stroke-width':3},svg);el('circle',{r:46,fill:'#fff',stroke:'#1B2547','stroke-width':2},svg);
+    for(let i=0;i<4;i++){const a=i*90*Math.PI/180;el('line',{x1:Math.sin(a)*38,y1:-Math.cos(a)*38,x2:Math.sin(a)*46,y2:-Math.cos(a)*46,stroke:'#1B2547','stroke-width':3},svg)}
+    const arm=el('g',{},svg);el('rect',{x:-6,y:-44,width:12,height:46,rx:6,fill:'#FF6B57',stroke:'#1B2547','stroke-width':2},arm);el('circle',{r:9,fill:'#FFC531',stroke:'#1B2547','stroke-width':2},svg);
+    const txt=el('text',{y:82,'text-anchor':'middle','font-size':13,'font-weight':800,fill:'#1B2547','font-family':'JetBrains Mono'},svg);
+    ST[c.id]={card,arm,txt,ang:0,target:0,queue:[],res:card.querySelector('.res'),val:()=>card.querySelector('select').value,jit:0};
+    const r=card.querySelector('[data-run]');if(r)r.onclick=()=>runCh(c.id);
+    card.querySelector('select').onchange=()=>{const S=ST[c.id];S.res.textContent='';if(c.id==='c4')S.tried=false};
+    const h=card.querySelector('[data-hold]');if(h){const dn=e=>{e.preventDefault();ST.c3.pressed=true;h.classList.add('down')},up=()=>{ST.c3.pressed=false;h.classList.remove('down')};
+      h.addEventListener('pointerdown',dn);h.addEventListener('pointerup',up);h.addEventListener('pointerleave',up);h.addEventListener('pointercancel',up)}});
+  function win(id,msg){const S=ST[id];S.res.innerHTML='✅ '+msg;S.res.style.color='#0f7d72';if(!solved[id]){solved[id]=true;store('sharara-ch',solved);S.card.classList.add('solved');S.card.querySelector('h3').textContent+=' ✅';checkAll()}}
+  function fail(id,msg){const S=ST[id];S.res.innerHTML='🤔 '+msg;S.res.style.color='#C2412F'}
+  function checkAll(){const n=CH.filter(c=>solved[c.id]).length;if(n===4&&!progress.challenges){progress.challenges=true;saveProg()}}
+  function runCh(id){const S=ST[id];const v=+S.val();S.ang=0;S.target=0;S.queue=[];S.res.textContent='⏳ المحرك ينفّذ الكود…';S.res.style.color='#1B2547';
+    if(id==='c1'){S.queue=[{deg:v*360/2048}];S.done=()=>{const d=v*360/2048;v===512?win(id,`رائع! 512 خطوة = 90° بالضبط. (2048 ÷ 4 = 512)`):fail(id,`دار ${d}° وليس 90°. لفة كاملة 2048 خطوة، فكم يكون ربعها؟ (اقسم على 4)`)}}
+    if(id==='c2'){for(let i=0;i<v;i++)S.queue.push({deg:90,label:'i = '+i});S.done=()=>{v===3?win(id,'ممتاز! الحلقة تكررت 3 مرات: i = 0 ثم 1 ثم 2، ثم توقفت عند 3.'):fail(id,`لوّح ${ar(v)} مرة. الحلقة تعمل ما دام i أصغر من الرقم… ونحن نريد 3 مرات.`)}}}
+  checkAll();
+  return{enter(){say('b10','🧑‍💻 كل تحدٍّ فيه <b>فراغ أصفر</b> في الكود. غيّر القيمة، جرّب، وراقب الذراع الأحمر. الخطأ جزء من التعلّم — جرّب كل الخيارات!')},
+   tick(dt,t){CH.forEach(c=>{const S=ST[c.id];
+    if(c.id==='c1'||c.id==='c2'){if(S.queue.length){const q=S.queue[0];const sp=180*dt;if(q.left===undefined)q.left=q.deg;const m=Math.min(sp,q.left);q.left-=m;S.ang+=m;if(q.label)S.txt.textContent=q.label;if(q.left<=0){S.queue.shift();if(!S.queue.length&&S.done){S.done();S.done=null}}}
+      if(!q2(S))S.txt.textContent=S.queue.length?S.txt.textContent:Math.round(S.ang)+'°'}
+    else if(c.id==='c3'){const want=S.val()==='HIGH'?S.pressed:!S.pressed;const pin=S.pressed?'5V':'0V';
+      if(want)S.ang+=120*dt;S.txt.textContent='pin2: '+pin;
+      if(S.pressed&&want&&S.val()==='HIGH'){S.hold=(S.hold||0)+dt;if(S.hold>.6&&!solved.c3)win('c3','صحيح! عند الضغط يصبح الطرف 2 بـ HIGH (5 فولت)، فيتحقق الشرط ويدور المحرك.');}
+      else if(!S.pressed&&want)fail('c3','لاحظ: المحرك يدور وأنت <b>لا تضغط</b> الزر! لأن الطرف بدون ضغط = LOW. نريد العكس.');
+      else if(solved.c3&&S.val()==='HIGH')S.res.innerHTML='✅ صحيح! اضغط الزر متى شئت ليدور المحرك.'}
+    else if(c.id==='c4'){const knob=+S.card.querySelector('[data-knob]').value,mx=+S.val();const rpm=Math.round(1+(mx-1)*knob/1023);
+      if(rpm>15){S.ang+=Math.sin(t*50)*1.5;S.txt.textContent=rpm+' rpm 😵';if(knob>700)fail('c4',`عند ${rpm} لفة/دقيقة المحرك <b>يهتز ولا يدور</b>! السرعة القصوى كبيرة جداً.`)}
+      else{S.ang+=rpm*6*dt*3;S.txt.textContent=rpm+' rpm';if(mx===15&&knob>900)win('c4','ممتاز! حتى عند أقصى المقبض تبقى السرعة 15 لفة/دقيقة، فيدور المحرك بأمان.');else if(mx===5)S.res.innerHTML='🐢 يعمل بأمان، لكنه بطيء جداً حتى في أقصى المقبض. يمكننا الوصول لسرعة أعلى بأمان!';else if(mx===15)S.res.innerHTML='👍 أدر المقبض إلى أقصاه لتتأكد!'}}
+    S.arm.setAttribute('transform',`rotate(${S.ang})`)})
+    const n=CH.filter(c=>solved[c.id]).length;if(n===4)say('b10','🏆 <b>حللت التحديات الأربعة!</b> صرت تعرف: عدد الخطوات، الحلقات <span class="mono">for</span>، الشروط <span class="mono">if</span>، وقراءة الحساسات. أنت مبرمج حقيقي! اذهب لشهادتك 🎓','good')}};
+  function q2(S){return S.queue.length>0}})();
+
+/* ================= CERT & BRAND ================= */
+const SW=['#FF6B57','#14A89A','#3C78F0','#8A5CF6','#E8A400','#E2467A'];
+let brand=Object.assign({name:'مختبر الشرارة',tag:'من السلك… إلى الروبوت',sig:'',color:'#FF6B57'},store('sharara-brand')||{});
+function applyBrand(){document.documentElement.style.setProperty('--brand',brand.color);
+  $('#bName').textContent=brand.name;$('#bTag').textContent=brand.tag;
+  $$('.cB').forEach(e=>e.textContent=brand.name);$$('.cT').forEach(e=>e.textContent=brand.tag);
+  $$('.cS').forEach(e=>e.textContent=brand.sig||brand.name);$$('.fB').forEach(e=>e.textContent=brand.name);
+  $$('.fS').forEach(e=>e.innerHTML=brand.sig?brand.sig:'<a href="#" onclick="openBrand();return false" style="color:inherit">اضغط هنا لإضافة اسمك ✎</a>');document.title=brand.name+' · رحلة الشرارة'}
+let pickColor=brand.color;
+function openBrand(){$('#fName').value=brand.name;$('#fTag').value=brand.tag;$('#fSig').value=brand.sig;pickColor=brand.color;
+  $('#sw').innerHTML=SW.map(c=>`<button style="background:${c}" data-c="${c}" class="${c===pickColor?'sel':''}"></button>`).join('');
+  $$('#sw button').forEach(b=>b.onclick=()=>{pickColor=b.dataset.c;$$('#sw button').forEach(x=>x.classList.toggle('sel',x===b));document.documentElement.style.setProperty('--brand',pickColor)});
+  $('#modal').classList.add('show')}
+$('#brandBtn').onclick=openBrand;
+$('#mCancel').onclick=()=>{$('#modal').classList.remove('show');applyBrand()};
+$('#mSave').onclick=()=>{brand={name:$('#fName').value.trim()||'مختبر الشرارة',tag:$('#fTag').value.trim(),sig:$('#fSig').value.trim(),color:pickColor};store('sharara-brand',brand);applyBrand();$('#modal').classList.remove('show')};
+function renderCert(){const n=store('sharara-kid')||'';$('#kidName').value=n;$('#certKid').textContent=n||'اسم البطل';
+  const s=starsN();$('#certStars').textContent='⭐'.repeat(s)+'☆'.repeat(Math.max(0,TOTAL-s));
+  $('#certDate').textContent=new Date().toLocaleDateString('ar-IQ',{year:'numeric',month:'long',day:'numeric'})}
+$('#kidName').oninput=e=>{store('sharara-kid',e.target.value);$('#certKid').textContent=e.target.value||'اسم البطل'};
+
+/* ============ boot ============ */
+applyBrand();buildQuizzes();go(location.hash.slice(1)||'home');requestAnimationFrame(frame);
+</script>
+</body>
+</html>
